@@ -1,0 +1,262 @@
+:host {
+    background-color: var(--theme-bg-more-2);
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: width .16s ease;
+}
+
+:host(.resizing) {
+    transition: none;
+}
+
+// ─── Collapsed rail ──────────────────────────────────────────────
+
+.collapsed-bar {
+    gap: .25rem;
+    padding: .4rem .25rem;
+
+    .collapsed-divider {
+        width: 60%;
+        height: 1px;
+        background-color: var(--theme-secondary);
+        margin: .25rem 0;
+        opacity: .7;
+    }
+}
+
+// ─── Shared compact icon button ──────────────────────────────────
+
+.icon-btn {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: .4rem;
+    background: transparent;
+    color: inherit;
+    opacity: .65;
+    cursor: pointer;
+    transition: background-color .12s ease, opacity .12s ease, transform .12s ease;
+
+    i {
+        font-size: .78rem;
+    }
+
+    &:hover {
+        opacity: 1;
+        background-color: var(--theme-secondary);
+    }
+
+    &:active {
+        transform: scale(.92);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+// ─── Expanded panel ─────────────────────────────────────────────
+
+.tree-panel {
+    min-width: 0;
+    padding: .4rem .35rem .35rem .35rem;
+}
+
+.tree-toolbar {
+    gap: .1rem;
+    padding: 0 .1rem .3rem .35rem;
+
+    .tree-title {
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        opacity: .5;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.tree-filter {
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: .45rem;
+    background-color: var(--theme-secondary);
+    margin: 0 .1rem .35rem .1rem;
+    font-size: .8rem;
+    transition: box-shadow .12s ease;
+
+    &:focus {
+        background-color: var(--theme-secondary);
+        box-shadow: 0 0 0 2px var(--theme-primary);
+    }
+}
+
+.profile-tree {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+
+    .profile-tree-container {
+        padding: 0 .1rem .5rem .1rem;
+        min-height: 100%;
+    }
+
+    .fw-20 {
+        flex: 0 0 auto;
+        width: 20px;
+    }
+
+    .fas.fa-chevron-right,
+    .fas.fa-chevron-down {
+        font-size: .7rem;
+    }
+
+    profile-icon {
+        width: 15px;
+        height: 15px;
+    }
+
+    .tree-item {
+        text-decoration: none;
+        color: inherit;
+        padding: calc(.25rem * calc(var(--spaciness) * var(--spaciness))) 0;
+        padding-right: .25rem;
+        border-radius: .4rem;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        transition: background-color .12s ease;
+
+        .item-label {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &.tree-group .item-label {
+            font-weight: 500;
+        }
+
+        &:hover {
+            background-color: var(--theme-secondary);
+
+            .actions {
+                display: flex;
+            }
+        }
+
+        .actions {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 0;
+            flex-direction: row;
+            align-items: center;
+            gap: 2px;
+            height: 100%;
+            padding: 0 .2rem 0 .5rem;
+            background: linear-gradient(
+                to right,
+                transparent 0,
+                var(--theme-secondary) .45rem,
+                var(--theme-secondary) 100%
+            );
+
+            .action {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 19px;
+                height: 19px;
+                font-size: .58rem;
+                background-color: var(--theme-bg-more-2);
+                border-radius: .3rem;
+                opacity: .85;
+                transition: background-color .12s ease, color .12s ease, transform .12s ease, opacity .12s ease;
+
+                &:hover {
+                    opacity: 1;
+                    background-color: var(--theme-primary);
+                    color: var(--theme-secondary);
+                }
+
+                &:active {
+                    transform: scale(.9);
+                }
+
+                &.action-danger:hover {
+                    background-color: #d9534f;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+// ─── macOS inset title bar spacing ──────────────────────────────
+
+:host(.mac-inset) {
+    padding-top: var(--tabs-height);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--tabs-height);
+        -webkit-app-region: drag;
+    }
+}
+
+// ─── Resize grabber: invisible hot zone, hairline on hover ──────
+
+.grabber {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    background-color: transparent;
+    transition: background-color .12s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background-color: var(--theme-primary);
+        opacity: 0;
+        transition: opacity .12s ease;
+    }
+
+    &:hover::after {
+        opacity: .8;
+    }
+}
+
+:host(.resizing) .grabber::after {
+    opacity: 1;
+}
