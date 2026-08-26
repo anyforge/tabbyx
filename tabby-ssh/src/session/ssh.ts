@@ -164,7 +164,7 @@ export class SSHSession {
         // Auto 模式下，若已保存密码，跳过私钥自动加载，避免反复弹「Private key passphrase」
         let hasSavedPassword = false
         if (!this.profile.options.auth && this.profile.options.user) {
-            hasSavedPassword = !!(await this.passwordStorage.loadPassword(this.profile, this.profile.options.user))
+            hasSavedPassword = Boolean(await this.passwordStorage.loadPassword(this.profile, this.profile.options.user))
         }
 
         if (!this.profile.options.auth || this.profile.options.auth === 'publicKey') {

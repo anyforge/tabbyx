@@ -132,7 +132,7 @@ export class ProfileTreeComponent extends BaseComponent {
         // 左侧只显示用户手动创建的连接（非 builtin）。
         // 不传 includeNonUserGroup → 不再生成 built-in / ungrouped 两个虚拟组；
         // 内置模板与从 ~/.ssh/config 导入的连接只出现在「新建连接」的模板选择器里。
-        let groups = await this.profilesService.getProfileGroups({ includeProfiles: true })
+        const groups = await this.profilesService.getProfileGroups({ includeProfiles: true })
 
         for (const group of groups) {
             if (group.profiles?.length) {
@@ -519,7 +519,7 @@ export class ProfileTreeComponent extends BaseComponent {
     ////// DRAG & DROP //////
 
     onProfileDragStart (event: DragEvent, profile: PartialProfile<Profile>): void {
-        if (profile.isBuiltin || profile.isTemplate) {
+        if (profile.isBuiltin === true || profile.isTemplate === true) {
             event.preventDefault()
             return
         }
@@ -622,7 +622,7 @@ export class ProfileTreeComponent extends BaseComponent {
             if (payload.profile && this.isUserGroup(group)) {
                 await this.moveProfileTo(payload.profile, group)
             }
-        } else if (payload.type === 'group') {
+        } else {
             if (payload.group && this.canDropGroup(payload.group, group)) {
                 await this.moveGroupTo(payload.group, group)
             }
@@ -643,7 +643,7 @@ export class ProfileTreeComponent extends BaseComponent {
             if (payload.profile) {
                 await this.moveProfileTo(payload.profile, null)
             }
-        } else if (payload.type === 'group') {
+        } else {
             if (payload.group) {
                 await this.moveGroupTo(payload.group, null)
             }
@@ -846,7 +846,7 @@ export class ProfileTreeComponent extends BaseComponent {
     }
 
     private saveProfileGroupCollapse (group: PartialProfileGroup<CollapsableProfileGroup>): void {
-        const collapsed = { ...(this.config.store.appearance.profileGroupCollapsed ?? {}) }
+        const collapsed = { ...this.config.store.appearance.profileGroupCollapsed ?? {} }
         collapsed[group.id] = group.collapsed
         this.config.store.appearance.profileGroupCollapsed = collapsed
         this.config.save().catch(() => null)

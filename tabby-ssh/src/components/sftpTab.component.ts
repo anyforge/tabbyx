@@ -18,12 +18,13 @@ export class SFTPTabComponent extends BaseTabComponent {
     @Input() path = '/'
     @Input() cwdDetectionAvailable = false
 
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor -- Angular DI forwards injector to BaseTabComponent
     constructor (injector: Injector) {
         super(injector)
     }
 
     ngOnInit (): void {
-        this.setTitle(`SFTP · ${this.profile?.name ?? ''}`)
+        this.setTitle(`SFTP · ${this.profile.name}`)
         this.icon = 'far fa-folder-open'
 
         // When the underlying SSH session dies (tab closed / disconnected),
