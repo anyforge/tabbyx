@@ -1,14 +1,13 @@
 {
-  "name": "tabby",
-  "description": "A terminal for a modern age",
+  "name": "tabbyx",
+  "description": "Terminal Is All You Need",
   "private": true,
-  "repository": "https://github.com/Eugeny/tabby",
+  "repository": "https://github.com/anyforge/tabbyx",
   "author": {
-    "name": "Tabby Developers",
-    "email": "e@ajenti.org"
+    "name": "anyforge"
   },
   "main": "dist/main.js",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.1",
   "scripts": {
     "postinstall": "patch-package",
     "build": "webpack --progress --color --display-modules",

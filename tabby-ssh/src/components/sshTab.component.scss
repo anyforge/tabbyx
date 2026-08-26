@@ -1,7 +1,1 @@
-sftp-panel {
-    position: absolute;
-    height: 80%;
-    width: 100%;
-    bottom: 0;
-    z-index: 5;
-}
+// SFTP 面板已改为独立 pane（SFTPTabComponent），此处不再需要覆盖层样式

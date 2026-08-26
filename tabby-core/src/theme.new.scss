@@ -14,23 +14,29 @@ app-root {
 
             .btn-tab-bar {
                 background: transparent;
-                line-height: 42px;
+                line-height: normal;
                 align-items: center;
                 svg, path {
                     fill: var(--bs-body-color);
                     fill-opacity: 0.75;
                 }
 
-                &:hover { background: rgba(0, 0, 0, .125) !important; }
-                &:active { background: rgba(0, 0, 0, .25) !important; }
+                &:hover { background: var(--theme-secondary) !important; }
+                &:active { background: var(--theme-bg-more-2) !important; }
             }
 
             &>.tabs {
                 tab-header {
                     border-left: 1px solid transparent;
                     border-right: 1px solid transparent;
-                    transition: 0.125s ease-out width;
+                    border-radius: 6px;
+                    margin: 5px 2px;
+                    transition: 0.2s ease-out background, 0.2s ease-out color, 0.2s ease-out width, 0.2s ease-out box-shadow;
                     color: var(--theme-fg-more-2);
+
+                    &:hover:not(.active) {
+                        background: var(--theme-bg-more);
+                    }
 
                     .index {
                         color: var(--bs-body-color);
@@ -62,6 +68,7 @@ app-root {
                     &.active {
                         color: var(--theme-fg);
                         background: var(--body-bg);
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
                     }
                 }
             }
@@ -357,13 +364,18 @@ hotkey-input-modal {
 }
 
 *::-webkit-scrollbar {
-    background: rgba(0, 0, 0, .125);
-    width: 10px;
-    margin: 5px;
+    background: transparent;
+    width: 4px;
+    height: 4px;
 }
 
 *::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, .25);
+    background: rgba(255, 255, 255, .3);
+    border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, .5);
 }
 
 *::-webkit-scrollbar-corner,
@@ -438,15 +450,55 @@ start-page {
 }
 
 split-tab-spanner {
-    background: rgba(var(--bs-dark-rgb), .1);
+    background: transparent;
 
     &:hover, &.active {
-        background: rgba(var(--bs-dark-rgb), .2);
+        background: rgba(var(--bs-dark-rgb), .08);
     }
 }
 
 window-controls {
     button svg {
         fill: var(--theme-fg) !important;
+    }
+}
+
+.dropdown-menu.tabs-menu {
+    max-height: 60vh;
+    overflow-y: auto;
+    min-width: 220px;
+    max-width: 320px;
+    padding: 4px;
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 4px;
+
+        &:hover:not(.active) {
+            background: var(--theme-bg-more-2);
+            color: var(--theme-fg);
+        }
+
+        .tab-index {
+            flex: none;
+            min-width: 16px;
+            text-align: right;
+            font-size: 12px;
+            opacity: 0.55;
+        }
+
+        .tab-name {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tab-check {
+            flex: none;
+        }
     }
 }

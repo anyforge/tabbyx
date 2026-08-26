@@ -46,7 +46,7 @@ async function prefetchURL (url) {
     await (await fetch(url)).text()
 }
 
-const Tabby = {
+const TabbyX = {
     registerMock: (name, mod) => {
         mocks[name] = mod
     },
@@ -59,30 +59,30 @@ const Tabby = {
         return { ...pkg, url }
     },
     registerPluginModule: (packageName, module) => {
-        Tabby.registerModule(`resources/builtin-plugins/${packageName}`, module)
-        Tabby.registerModule(packageName, module)
+        TabbyX.registerModule(`resources/builtin-plugins/${packageName}`, module)
+        TabbyX.registerModule(packageName, module)
     },
     loadPlugin: async (url) => {
-        const info = await Tabby.resolvePluginInfo(url)
+        const info = await TabbyX.resolvePluginInfo(url)
         const module = await webRequire(info.url)
-        Tabby.registerPluginModule(info.name, module)
+        TabbyX.registerPluginModule(info.name, module)
         return module
     },
     loadPlugins: async (urls, progressCallback) => {
-        const infos: any[] = await Promise.all(urls.map(Tabby.resolvePluginInfo))
+        const infos: any[] = await Promise.all(urls.map(TabbyX.resolvePluginInfo))
         progressCallback?.(0, 1)
         await Promise.all(infos.map(x => prefetchURL(x.url)))
         const pluginModules = []
         for (const info of infos) {
             const module = await webRequire(info.url)
-            Tabby.registerPluginModule(info.name, module)
+            TabbyX.registerPluginModule(info.name, module)
             pluginModules.push(module)
             progressCallback?.(infos.indexOf(info), infos.length)
         }
         progressCallback?.(1, 1)
         return pluginModules
     },
-    bootstrap: (...args) => window['bootstrapTabby'](...args),
+    bootstrap: (...args) => window['bootstrapTabbyX'](...args),
     webRequire,
 }
 
@@ -91,7 +91,7 @@ Object.assign(window, {
     module: {
         paths: [],
     },
-    Tabby,
+    TabbyX,
     __filename: '',
     __dirname: '',
     process: {

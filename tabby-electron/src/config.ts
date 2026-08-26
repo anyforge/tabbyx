@@ -5,7 +5,7 @@ export class ElectronConfigProvider extends ConfigProvider {
     platformDefaults = {
         [Platform.macOS]: {
             hotkeys: {
-                'toggle-window': ['Ctrl-Space'],
+                'toggle-window': [],
                 'new-window': ['⌘-N'],
             },
         },

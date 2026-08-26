@@ -344,14 +344,6 @@ export class SFTPPanelComponent {
         this.platform.popupContextMenu(await this.buildContextMenu(item), event)
     }
 
-    get shouldShowCWDTip (): boolean {
-        return !window.localStorage.sshCWDTipDismissed
-    }
-
-    dismissCWDTip (): void {
-        window.localStorage.sshCWDTipDismissed = 'true'
-    }
-
     editPath (): void {
         this.editingPath = this.path
     }

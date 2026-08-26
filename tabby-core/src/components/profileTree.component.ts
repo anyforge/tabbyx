@@ -41,17 +41,29 @@ export class ProfileTreeComponent extends BaseComponent {
     profileGroups: PartialProfileGroup<ProfileGroup>[] = []
     rootGroups: PartialProfileGroup<ProfileGroup>[] = []
 
+    /** User-created profiles without a folder, rendered at the tree root */
+    rootProfiles: PartialProfile<Profile>[] = []
+
     filteredProfiles: PartialProfile<Profile>[] = []
     @Input() filter = ''
 
     panelMinWidth = 200
     panelMaxWidth = 600
-    panelInternalWidth: number = parseInt(window.localStorage.profileTreeWidth ?? '300')
+    panelInternalWidth = 300
     panelStartWidth = this.panelInternalWidth
     panelIsResizing = false
     panelStartX = 0
 
-    sidebarCollapsed: boolean = window.localStorage.profileTreeCollapsed === 'true'
+    sidebarCollapsed = false
+
+    /** 拖拽中的源项（连接或文件夹） */
+    private dragPayload: { type: 'profile' | 'group', profile?: PartialProfile<Profile>, group?: PartialProfileGroup<CollapsableProfileGroup> } | null = null
+
+    /** 拖拽源项 id，用于给拖拽中的 item 加半透明样式 */
+    dragSourceId: string | null = null
+
+    /** 当前高亮的放置目标（'root' 或 group id） */
+    dragOverTargetId: string | null = null
 
     constructor (
         private app: AppService,
@@ -66,31 +78,80 @@ export class ProfileTreeComponent extends BaseComponent {
     }
 
     async ngOnInit (): Promise<void> {
+        this.migrateSidebarState()
+        this.sidebarCollapsed = this.config.store.appearance.profileTreeCollapsed ?? false
+        this.panelInternalWidth = this.config.store.appearance.profileTreeWidth ?? 300
+        this.panelStartWidth = this.panelInternalWidth
+
         await this.loadTreeItems()
-        this.subscribeUntilDestroyed(this.config.changed$, () => this.loadTreeItems())
+        this.subscribeUntilDestroyed(this.config.changed$, () => {
+            this.loadTreeItems()
+            const width = this.config.store.appearance.profileTreeWidth
+            if (typeof width === 'number' && width !== this.panelInternalWidth && !this.panelIsResizing) {
+                this.panelInternalWidth = width
+            }
+        })
         this.app.tabsChanged$.subscribe(() => this.tabStateChanged())
         this.app.activeTabChange$.subscribe(() => this.tabStateChanged())
     }
 
+    /**
+     * 一次性迁移：把旧版本存 localStorage 的侧栏状态搬到 config.yaml，
+     * 使其可随配置同步（configSync）。迁移完成后删除对应 localStorage 键。
+     */
+    private migrateSidebarState (): void {
+        let changed = false
+        if (window.localStorage.profileTreeCollapsed !== undefined) {
+            this.config.store.appearance.profileTreeCollapsed = window.localStorage.profileTreeCollapsed === 'true'
+            window.localStorage.removeItem('profileTreeCollapsed')
+            changed = true
+        }
+        if (window.localStorage.profileTreeWidth !== undefined) {
+            const width = parseInt(window.localStorage.profileTreeWidth)
+            if (!isNaN(width)) {
+                this.config.store.appearance.profileTreeWidth = width
+            }
+            window.localStorage.removeItem('profileTreeWidth')
+            changed = true
+        }
+        if (window.localStorage.profileGroupCollapsed !== undefined) {
+            try {
+                this.config.store.appearance.profileGroupCollapsed = JSON.parse(window.localStorage.profileGroupCollapsed ?? '{}')
+            } catch { /* ignore corrupt value */ }
+            window.localStorage.removeItem('profileGroupCollapsed')
+            changed = true
+        }
+        if (changed) {
+            this.config.save().catch(() => null)
+        }
+    }
+
     private async loadTreeItems (): Promise<void> {
-        const profileGroupCollapsed = JSON.parse(window.localStorage.profileGroupCollapsed ?? '{}')
-        let groups = await this.profilesService.getProfileGroups({ includeNonUserGroup: true, includeProfiles: true })
+        const profileGroupCollapsed = this.config.store.appearance.profileGroupCollapsed ?? {}
+
+        // 左侧只显示用户手动创建的连接（非 builtin）。
+        // 不传 includeNonUserGroup → 不再生成 built-in / ungrouped 两个虚拟组；
+        // 内置模板与从 ~/.ssh/config 导入的连接只出现在「新建连接」的模板选择器里。
+        let groups = await this.profilesService.getProfileGroups({ includeProfiles: true })
 
         for (const group of groups) {
             if (group.profiles?.length) {
-                // remove template profiles
+                // remove template / builtin / blocklisted profiles
                 group.profiles = group.profiles.filter(x => !x.isTemplate)
-
-                // remove blocklisted profiles
+                group.profiles = group.profiles.filter(x => !x.isBuiltin)
                 group.profiles = group.profiles.filter(x => x.id && !this.config.store.profileBlacklist.includes(x.id))
             }
         }
 
-        if (!this.config.store.terminal.showBuiltinProfiles) { groups = groups.filter(g => g.id !== 'built-in') }
+        // 无分组的用户连接直接挂在树根
+        const userProfiles = await this.profilesService.getProfiles({ includeBuiltin: false })
+        this.rootProfiles = userProfiles.filter(x =>
+            !x.isTemplate && !x.isBuiltin && x.id &&
+            !this.config.store.profileBlacklist.includes(x.id) &&
+            !x.group,
+        )
 
         groups.sort((a, b) => a.name.localeCompare(b.name))
-        groups.sort((a, b) => (a.id === 'built-in' || !a.editable ? 1 : 0) - (b.id === 'built-in' || !b.editable ? 1 : 0))
-        groups.sort((a, b) => (a.id === 'ungrouped' ? 0 : 1) - (b.id === 'ungrouped' ? 0 : 1))
         this.profileGroups = groups.map(g => ProfileTreeComponent.intoPartialCollapsableProfileGroup(g, profileGroupCollapsed[g.id] ?? false))
         this.rootGroups = this.profilesService.buildGroupTree(this.profileGroups)
     }
@@ -455,6 +516,217 @@ export class ProfileTreeComponent extends BaseComponent {
         ])
     }
 
+    ////// DRAG & DROP //////
+
+    onProfileDragStart (event: DragEvent, profile: PartialProfile<Profile>): void {
+        if (profile.isBuiltin || profile.isTemplate) {
+            event.preventDefault()
+            return
+        }
+        this.dragPayload = { type: 'profile', profile }
+        this.dragSourceId = profile.id ?? null
+        if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = 'move'
+            event.dataTransfer.setData('text/plain', profile.id ?? '')
+        }
+    }
+
+    onGroupDragStart (event: DragEvent, group: PartialProfileGroup<CollapsableProfileGroup>): void {
+        if (!this.isUserGroup(group)) {
+            event.preventDefault()
+            return
+        }
+        this.dragPayload = { type: 'group', group }
+        this.dragSourceId = group.id
+        if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = 'move'
+            event.dataTransfer.setData('text/plain', group.id)
+        }
+    }
+
+    onDragEnd (): void {
+        this.dragPayload = null
+        this.dragSourceId = null
+        this.clearDragOver()
+    }
+
+    /** 连接 item 作为拖拽源，悬停时把放置转发到它所在的文件夹（或根目录） */
+    onProfileDragOver (event: DragEvent, group?: PartialProfileGroup<CollapsableProfileGroup>): void {
+        if (group) {
+            this.onGroupDragOver(event, group)
+        } else {
+            this.onRootDragOver(event)
+        }
+    }
+
+    onGroupDragOver (event: DragEvent, group: PartialProfileGroup<CollapsableProfileGroup>): void {
+        if (!this.dragPayload) {
+            return
+        }
+        const canDrop = this.dragPayload.type === 'profile'
+            ? this.isUserGroup(group)
+            : this.canDropGroup(this.dragPayload.group!, group)
+        if (!canDrop) {
+            if (event.dataTransfer) {
+                event.dataTransfer.dropEffect = 'none'
+            }
+            this.dragOverTargetId = null
+            return
+        }
+        event.preventDefault()
+        event.stopPropagation()
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = 'move'
+        }
+        this.dragOverTargetId = group.id
+    }
+
+    onRootDragOver (event: DragEvent): void {
+        if (!this.dragPayload) {
+            return
+        }
+        // 拖到根目录：连接和文件夹都合法（文件夹到根目录 = 取消父文件夹）
+        event.preventDefault()
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = 'move'
+        }
+        this.dragOverTargetId = 'root'
+    }
+
+    onRootDragLeave (event: DragEvent): void {
+        const container = event.currentTarget as HTMLElement
+        const related = event.relatedTarget as HTMLElement | null
+        if (!related || !container.contains(related)) {
+            this.clearDragOver()
+        }
+    }
+
+    async onProfileDrop (event: DragEvent, group?: PartialProfileGroup<CollapsableProfileGroup>): Promise<void> {
+        if (group) {
+            await this.onGroupDrop(event, group)
+        } else {
+            await this.onRootDrop(event)
+        }
+    }
+
+    async onGroupDrop (event: DragEvent, group: PartialProfileGroup<CollapsableProfileGroup>): Promise<void> {
+        event.preventDefault()
+        event.stopPropagation()
+        const payload = this.dragPayload
+        this.clearDragOver()
+        if (!payload) {
+            return
+        }
+
+        if (payload.type === 'profile') {
+            if (payload.profile && this.isUserGroup(group)) {
+                await this.moveProfileTo(payload.profile, group)
+            }
+        } else if (payload.type === 'group') {
+            if (payload.group && this.canDropGroup(payload.group, group)) {
+                await this.moveGroupTo(payload.group, group)
+            }
+        }
+        this.dragPayload = null
+        this.dragSourceId = null
+    }
+
+    async onRootDrop (event: DragEvent): Promise<void> {
+        event.preventDefault()
+        const payload = this.dragPayload
+        this.clearDragOver()
+        if (!payload) {
+            return
+        }
+
+        if (payload.type === 'profile') {
+            if (payload.profile) {
+                await this.moveProfileTo(payload.profile, null)
+            }
+        } else if (payload.type === 'group') {
+            if (payload.group) {
+                await this.moveGroupTo(payload.group, null)
+            }
+        }
+        this.dragPayload = null
+        this.dragSourceId = null
+    }
+
+    /**
+     * 文件夹能否放到 targetGroup 下：目标必须是用户组、不能是自己或自己的后代，
+     * 且放过去后整棵子树深度不超过 MAX_GROUP_DEPTH。
+     */
+    canDropGroup (group: PartialProfileGroup<CollapsableProfileGroup>, targetGroup: PartialProfileGroup<CollapsableProfileGroup>): boolean {
+        if (!this.isUserGroup(targetGroup)) {
+            return false
+        }
+        if (targetGroup.id === group.id) {
+            return false
+        }
+        if (this.isGroupDescendant(group.id, targetGroup.id)) {
+            return false
+        }
+        const movingHeight = this.subtreeHeight(group)
+        const maxParentDepth = MAX_GROUP_DEPTH - 2 - movingHeight
+        return this.groupDepth(targetGroup.id) <= maxParentDepth
+    }
+
+    /** 从自身到最深后代的层数（叶子 = 0，含一层子文件夹 = 1） */
+    subtreeHeight (group: PartialProfileGroup<CollapsableProfileGroup>): number {
+        const children = group.children ?? []
+        if (!children.length) {
+            return 0
+        }
+        return 1 + Math.max(...children.map(child => this.subtreeHeight(child)))
+    }
+
+    /** nodeId 是否是 ancestorId 的后代（沿 parentGroupId 上溯） */
+    isGroupDescendant (ancestorId: string, nodeId: string): boolean {
+        let current = nodeId
+        let guard = 0
+        while (current && guard++ < 30) {
+            const g = this.profilesService.resolveProfileGroup(current)
+            if (!g?.parentGroupId) {
+                return false
+            }
+            if (g.parentGroupId === ancestorId) {
+                return true
+            }
+            current = g.parentGroupId
+        }
+        return false
+    }
+
+    async moveProfileTo (profile: PartialProfile<Profile>, group: PartialProfileGroup<CollapsableProfileGroup> | null): Promise<void> {
+        const cProfile = this.config.store.profiles.find(p => p.id === profile.id)
+        if (!cProfile) {
+            return
+        }
+        if (group) {
+            cProfile.group = group.id
+        } else {
+            delete cProfile.group
+        }
+        await this.config.save()
+    }
+
+    async moveGroupTo (group: PartialProfileGroup<CollapsableProfileGroup>, targetGroup: PartialProfileGroup<CollapsableProfileGroup> | null): Promise<void> {
+        const cGroup = this.config.store.groups.find(g => g.id === group.id)
+        if (!cGroup) {
+            return
+        }
+        if (targetGroup) {
+            cGroup.parentGroupId = targetGroup.id
+        } else {
+            delete cGroup.parentGroupId
+        }
+        await this.config.save()
+    }
+
+    clearDragOver (): void {
+        this.dragOverTargetId = null
+    }
+
     private async tabStateChanged (): Promise<void> {
         // TODO: show active tab in the side panel with eye icon
     }
@@ -463,12 +735,26 @@ export class ProfileTreeComponent extends BaseComponent {
         return this.profilesService.launchProfile(profile)
     }
 
+    /**
+     * 打开（或聚焦）设置 tab —— 设置入口已从 tab bar 移到侧栏左下角。
+     * 通过运行时 require 复用 tabby-settings 的 SettingsTabComponent，避免编译期循环依赖。
+     */
+    openSettings (): void {
+        const { SettingsTabComponent } = window['nodeRequire']('tabby-settings')
+        const settingsTab = this.app.tabs.find(tab => tab instanceof SettingsTabComponent)
+        if (settingsTab) {
+            this.app.selectTab(settingsTab)
+        } else {
+            this.app.openNewTabRaw({ type: SettingsTabComponent })
+        }
+    }
+
     async onFilterChange (): Promise<void> {
         try {
             const q = this.filter.trim().toLowerCase()
 
             if (q.length === 0) {
-                this.rootGroups = this.profilesService.buildGroupTree(this.profileGroups)
+                await this.loadTreeItems()
                 return
             }
 
@@ -483,6 +769,7 @@ export class ProfileTreeComponent extends BaseComponent {
                 { sort: false },
             ).search(q)
 
+            this.rootProfiles = []
             this.rootGroups = [
                 {
                     id: 'search',
@@ -501,7 +788,8 @@ export class ProfileTreeComponent extends BaseComponent {
 
     toggleSidebar (): void {
         this.sidebarCollapsed = !this.sidebarCollapsed
-        window.localStorage.profileTreeCollapsed = this.sidebarCollapsed ? 'true' : 'false'
+        this.config.store.appearance.profileTreeCollapsed = this.sidebarCollapsed
+        this.config.save().catch(() => null)
     }
 
     @HostBinding('class.collapsed')
@@ -532,12 +820,13 @@ export class ProfileTreeComponent extends BaseComponent {
         const delta = event.clientX - this.panelStartX
         const width = Math.min(Math.max(this.panelMinWidth, this.panelStartWidth + delta), this.panelMaxWidth)
         this.panelWidth = width
-        window.localStorage.profileTreeWidth = width
     }
 
     @HostListener('document:mouseup')
     stopResize (): boolean {
         this.panelIsResizing = false
+        this.config.store.appearance.profileTreeWidth = this.panelInternalWidth
+        this.config.save().catch(() => null)
         return true
     }
 
@@ -557,9 +846,10 @@ export class ProfileTreeComponent extends BaseComponent {
     }
 
     private saveProfileGroupCollapse (group: PartialProfileGroup<CollapsableProfileGroup>): void {
-        const profileGroupCollapsed = JSON.parse(window.localStorage.profileGroupCollapsed ?? '{}')
-        profileGroupCollapsed[group.id] = group.collapsed
-        window.localStorage.profileGroupCollapsed = JSON.stringify(profileGroupCollapsed)
+        const collapsed = { ...(this.config.store.appearance.profileGroupCollapsed ?? {}) }
+        collapsed[group.id] = group.collapsed
+        this.config.store.appearance.profileGroupCollapsed = collapsed
+        this.config.save().catch(() => null)
     }
 
     private static intoPartialCollapsableProfileGroup (group: PartialProfileGroup<ProfileGroup>, collapsed: boolean): PartialProfileGroup<CollapsableProfileGroup> {

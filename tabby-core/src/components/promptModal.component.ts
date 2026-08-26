@@ -12,6 +12,7 @@ export class PromptModalComponent {
     @Input() remember: boolean
     @Input() showRememberCheckbox: boolean
     @ViewChild('input') input: ElementRef
+    showPassword = false
 
     constructor (
         private modalInstance: NgbActiveModal,

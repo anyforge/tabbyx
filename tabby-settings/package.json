@@ -1,7 +1,7 @@
 {
   "name": "tabby-settings",
   "version": "1.0.231-nightly.0",
-  "description": "Tabby terminal settings page",
+  "description": "TabbyX terminal settings page",
   "keywords": [
     "tabby-builtin-plugin"
   ],
@@ -15,7 +15,7 @@
     "dist",
     "typings"
   ],
-  "author": "Tabby Developers",
+  "author": "TabbyX Developers",
   "license": "MIT",
   "devDependencies": {
     "marked": "^18",

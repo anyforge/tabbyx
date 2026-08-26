@@ -51,14 +51,10 @@ export class DockMenuService {
             ])
         }
         if (this.hostApp.platform === Platform.macOS) {
+            // macOS Dock 右键菜单：只保留「新建窗口」，不列出连接类型/连接列表
+            //（新建与管理连接统一收敛到应用内左侧连接树）。
             this.electron.app.dock?.setMenu(this.electron.Menu.buildFromTemplate(
                 [
-                    ...[...recentProfiles, ...profiles].map(profile => ({
-                        label: profile.name,
-                        click: () => this.zone.run(async () => {
-                            this.profilesService.openNewTabForProfile(profile)
-                        }),
-                    })),
                     {
                         label: this.translate.instant('New Window'),
                         click: () => this.zone.run(() => this.hostApp.newWindow()),

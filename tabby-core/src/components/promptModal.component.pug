@@ -1,13 +1,21 @@
 .modal-body
-    input.form-control(
-        [type]='password ? "password" : "text"',
-        autofocus,
-        [(ngModel)]='value',
-        #input,
-        [placeholder]='prompt',
-        (keyup.enter)='ok()',
-        (keyup.esc)='cancel()',
-    )
+    .input-group
+        input.form-control(
+            [type]='password && !showPassword ? "password" : "text"',
+            autofocus,
+            [(ngModel)]='value',
+            #input,
+            [placeholder]='prompt',
+            (keyup.enter)='ok()',
+            (keyup.esc)='cancel()',
+        )
+        button.btn.btn-secondary(
+            *ngIf='password',
+            type='button',
+            (click)='showPassword = !showPassword',
+            (mousedown)='$event.preventDefault()'
+        )
+            i.far([class]="showPassword ? 'fa-eye-slash' : 'fa-eye'")
     .d-flex.align-items-start.mt-2
         checkbox(
             *ngIf='showRememberCheckbox',

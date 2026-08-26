@@ -1,16 +1,20 @@
 import * as russh from 'russh'
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker'
 import colors from 'ansi-colors'
-import { Component, Injector, HostListener } from '@angular/core'
+import { Component, Injector } from '@angular/core'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
-import { Platform, ProfilesService } from 'tabby-core'
+import { Platform, ProfilesService, TabsService, SplitTabComponent } from 'tabby-core'
 import { BaseTerminalTabComponent, ConnectableTerminalTabComponent } from 'tabby-terminal'
 import { SSHService } from '../services/ssh.service'
 import { KeyboardInteractivePrompt, SSHSession } from '../session/ssh'
 import { SSHPortForwardingModalComponent } from './sshPortForwardingModal.component'
+import { SFTPTabComponent } from './sftpTab.component'
 import { SSHProfile } from '../api'
 import { SSHShellSession } from '../session/shell'
 import { SSHMultiplexerService } from '../services/sshMultiplexer.service'
+
+/** SFTP pane 默认占分屏比例 60:40（终端占 1 - 此值） */
+const SFTP_PANE_RATIO = 0.4
 
 /** @hidden */
 @Component({
@@ -26,8 +30,8 @@ export class SSHTabComponent extends ConnectableTerminalTabComponent<SSHProfile>
     Platform = Platform
     sshSession: SSHSession|null = null
     session: SSHShellSession|null = null
-    sftpPanelVisible = false
-    sftpPath = '/'
+    /** 与本 tab 关联的 SFTP pane（按需创建，随 session 销毁） */
+    sftpTab: SFTPTabComponent|null = null
     enableToolbar = true
     activeKIPrompt: KeyboardInteractivePrompt|null = null
 
@@ -37,6 +41,7 @@ export class SSHTabComponent extends ConnectableTerminalTabComponent<SSHProfile>
         private ngbModal: NgbModal,
         private profilesService: ProfilesService,
         private sshMultiplexer: SSHMultiplexerService,
+        private tabsService: TabsService,
     ) {
         super(injector)
         this.sessionChanged$.subscribe(() => {
@@ -216,15 +221,69 @@ export class SSHTabComponent extends ConnectableTerminalTabComponent<SSHProfile>
     }
 
     async openSFTP (): Promise<void> {
-        this.sftpPath = await this.session?.getWorkingDirectory() ?? this.sftpPath
-        setTimeout(() => {
-            this.sftpPanelVisible = true
-        }, 100)
+        const session = this.sshSession
+        if (!session) {
+            return
+        }
+
+        // 已有关联的 SFTP pane → 聚焦它，避免重复创建（切换连接回来也不会串）
+        if (this.sftpTab) {
+            const split = this.app.getParentTab(this.sftpTab)
+            if (split) {
+                split.focus(this.sftpTab)
+                return
+            }
+            this.sftpTab = null
+        }
+
+        const sftpTab = this.tabsService.create({
+            type: SFTPTabComponent,
+            inputs: {
+                session,
+                profile: this.profile,
+                path: await this.session?.getWorkingDirectory() ?? '/',
+                cwdDetectionAvailable: this.session?.supportsWorkingDirectory() ?? false,
+            },
+        })
+        this.sftpTab = sftpTab
+
+        const parentSplit = this.parent instanceof SplitTabComponent ? this.parent : null
+        if (parentSplit) {
+            await parentSplit.addTab(sftpTab, this, 'r')
+            this.applySFTPRatio(parentSplit, sftpTab)
+        } else {
+            // 兜底：当前 tab 不在分屏容器里（极少见），先包装成 SplitTabComponent
+            await this.wrapAndSplitSFTP(sftpTab)
+        }
     }
 
-    @HostListener('click')
-    onClick (): void {
-        this.sftpPanelVisible = false
+    /** 让终端占大头、SFTP pane 占小头（默认 3:7） */
+    private applySFTPRatio (split: SplitTabComponent, sftpTab: SFTPTabComponent): void {
+        const container = split.getParentOf(sftpTab)
+        if (!container) {
+            return
+        }
+        const sftpIdx = container.children.indexOf(sftpTab)
+        const sshIdx = container.children.indexOf(this)
+        if (sftpIdx === -1 || sshIdx === -1) {
+            return
+        }
+        const total = container.ratios[sshIdx] + container.ratios[sftpIdx]
+        container.ratios[sshIdx] = total * (1 - SFTP_PANE_RATIO)
+        container.ratios[sftpIdx] = total * SFTP_PANE_RATIO
+        split.layout()
+    }
+
+    /** 兜底：当前 tab 不在分屏容器时，先包装成 SplitTabComponent 再分屏 */
+    private async wrapAndSplitSFTP (sftpTab: SFTPTabComponent): Promise<void> {
+        const index = this.app.tabs.indexOf(this)
+        const splitTab = this.tabsService.create({ type: SplitTabComponent })
+        this.app.removeTab(this)
+        await splitTab.addTab(this, null, 'r')
+        await splitTab.addTab(sftpTab, this, 'r')
+        this.app.addTabRaw(splitTab, index)
+        this.applySFTPRatio(splitTab, sftpTab)
+        splitTab.focus(sftpTab)
     }
 
     protected isSessionExplicitlyTerminated (): boolean {

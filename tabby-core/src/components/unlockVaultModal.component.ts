@@ -7,6 +7,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'
 })
 export class UnlockVaultModalComponent {
     passphrase: string
+    showPassword = false
     rememberFor = 1
     rememberOptions = [1, 5, 15, 60, 1440, 10080]
     @ViewChild('input') input: ElementRef

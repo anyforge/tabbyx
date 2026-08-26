@@ -235,7 +235,7 @@ async function convertHostToSSHProfile (host: string, settings: Record<string, s
                 }
                 break
 
-            // KeepaliveInterval and ReadyTimeout are in seconds in SSH config but milliseconds in Tabby
+            // KeepaliveInterval and ReadyTimeout are in seconds in SSH config but milliseconds in TabbyX
             case SSHProfilePropertyNames.KeepaliveInterval:
             case SSHProfilePropertyNames.ReadyTimeout:
                 const secondsString = settings[key]

@@ -14,6 +14,7 @@ import { SSHPortForwardingConfigComponent } from './components/sshPortForwarding
 import { SSHSettingsTabComponent } from './components/sshSettingsTab.component'
 import { SSHTabComponent } from './components/sshTab.component'
 import { SFTPPanelComponent } from './components/sftpPanel.component'
+import { SFTPTabComponent } from './components/sftpTab.component'
 import { SFTPDeleteModalComponent } from './components/sftpDeleteModal.component'
 import { KeyboardInteractiveAuthComponent } from './components/keyboardInteractiveAuthPanel.component'
 import { HostKeyPromptModalComponent } from './components/hostKeyPromptModal.component'
@@ -57,6 +58,7 @@ import { SFTPCreateDirectoryModalComponent } from './components/sftpCreateDirect
         SSHSettingsTabComponent,
         SSHTabComponent,
         SFTPPanelComponent,
+        SFTPTabComponent,
         KeyboardInteractiveAuthComponent,
         HostKeyPromptModalComponent,
     ],
@@ -66,5 +68,5 @@ export default class SSHModule { }
 
 export * from './api'
 export { SFTPFile, SFTPSession } from './session/sftp'
-export { SFTPPanelComponent, SSHTabComponent }
+export { SFTPPanelComponent, SSHTabComponent, SFTPTabComponent }
 export { PasswordStorageService } from './services/passwordStorage.service'

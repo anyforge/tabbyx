@@ -1,4 +1,4 @@
-# Tabby Local Plugin
+# TabbyX Local Plugin
 
 * local shells
 

@@ -1,7 +1,7 @@
 {
   "name": "tabby-community-color-schemes",
   "version": "1.0.231-nightly.0",
-  "description": "Community color schemes for Tabby",
+  "description": "Community color schemes for TabbyX",
   "keywords": [
     "tabby-builtin-plugin"
   ],
@@ -14,7 +14,7 @@
   "files": [
     "dist"
   ],
-  "author": "Tabby Developers",
+  "author": "TabbyX Developers",
   "license": "MIT",
   "peerDependencies": {
     "@angular/core": "^15",

@@ -4,60 +4,89 @@ import { TerminalColorScheme } from 'tabby-core'
 
 @Injectable({ providedIn: 'root' })
 export class DefaultColorSchemes extends TerminalColorSchemeProvider {
-    static defaultColorScheme: TerminalColorScheme = {
-        name: 'Tabby Default',
-        foreground: '#cacaca',
-        background: '#171717',
+    static oneDark: TerminalColorScheme = {
+        name: 'One Dark',
+        foreground: '#abb2bf',
+        background: '#282c34',
+        cursor: '#528bff',
+        colors: [
+            '#282c34',
+            '#e06c75',
+            '#98c379',
+            '#e5c07b',
+            '#61afef',
+            '#c678dd',
+            '#56b6c2',
+            '#abb2bf',
+            '#5c6370',
+            '#e06c75',
+            '#98c379',
+            '#e5c07b',
+            '#61afef',
+            '#c678dd',
+            '#56b6c2',
+            '#ffffff',
+        ],
+    }
+
+    static oneHalfLight: TerminalColorScheme = {
+        name: 'One Half Light',
+        foreground: '#383a42',
+        background: '#fafafa',
+        cursor: '#bfceff',
+        colors: [
+            '#383a42',
+            '#e45649',
+            '#50a14f',
+            '#c18401',
+            '#0184bc',
+            '#a626a4',
+            '#0997b3',
+            '#fafafa',
+            '#4f525e',
+            '#e06c75',
+            '#98c379',
+            '#e5c07b',
+            '#61afef',
+            '#c678dd',
+            '#56b6c2',
+            '#ffffff',
+        ],
+    }
+
+    static dracula: TerminalColorScheme = {
+        name: 'Dracula',
+        foreground: '#f8f8f2',
+        background: '#1e1f29',
         cursor: '#bbbbbb',
         colors: [
             '#000000',
-            '#ff615a',
-            '#b1e969',
-            '#ebd99c',
-            '#5da9f6',
-            '#e86aff',
-            '#82fff7',
-            '#dedacf',
-            '#313131',
-            '#f58c80',
-            '#ddf88f',
-            '#eee5b2',
-            '#a5c7ff',
-            '#ddaaff',
-            '#b7fff9',
+            '#ff5555',
+            '#50fa7b',
+            '#f1fa8c',
+            '#bd93f9',
+            '#ff79c6',
+            '#8be9fd',
+            '#bbbbbb',
+            '#555555',
+            '#ff5555',
+            '#50fa7b',
+            '#f1fa8c',
+            '#bd93f9',
+            '#ff79c6',
+            '#8be9fd',
             '#ffffff',
         ],
     }
 
-    static defaultLightColorScheme: TerminalColorScheme = {
-        name: 'Tabby Default Light',
-        foreground: '#4d4d4c',
-        background: '#ffffff',
-        cursor: '#4d4d4c',
-        colors: [
-            '#000000',
-            '#c82829',
-            '#718c00',
-            '#eab700',
-            '#4271ae',
-            '#8959a8',
-            '#3e999f',
-            '#ffffff',
-            '#000000',
-            '#c82829',
-            '#718c00',
-            '#eab700',
-            '#4271ae',
-            '#8959a8',
-            '#3e999f',
-            '#ffffff',
-        ],
-    }
+    static defaultColorScheme: TerminalColorScheme = DefaultColorSchemes.dracula
+    static defaultLightColorScheme: TerminalColorScheme = DefaultColorSchemes.oneHalfLight
 
     async getSchemes (): Promise<TerminalColorScheme[]> {
         return [
-            DefaultColorSchemes.defaultColorScheme,
-            DefaultColorSchemes.defaultLightColorScheme,
+            DefaultColorSchemes.oneDark,
+            DefaultColorSchemes.oneHalfLight,
+            DefaultColorSchemes.dracula,
         ]
     }
 }

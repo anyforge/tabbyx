@@ -24,7 +24,7 @@ export class HomeBaseService {
     }
 
     openGitHub (): void {
-        this.platform.openExternal('https://github.com/Eugeny/tabby')
+        this.platform.openExternal('https://github.com/anyforge/tabbyx')
     }
 
     openDiscord (): void {
@@ -32,7 +32,7 @@ export class HomeBaseService {
     }
 
     openTranslations (): void {
-        this.platform.openExternal('https://translate.tabby.sh/project/tabby')
+        this.platform.openExternal('https://github.com/anyforge/tabbyx')
     }
 
     reportBug (): void {
@@ -41,7 +41,7 @@ export class HomeBaseService {
         const plugins = this.bootstrapData.installedPlugins.filter(x => !x.isBuiltin).map(x => x.name)
         body += `Plugins: ${plugins.join(', ') || 'none'}\n`
         body += `Frontend: ${this.config.store.terminal?.frontend}\n\n`
-        this.platform.openExternal(`https://github.com/Eugeny/tabby/issues/new?body=${encodeURIComponent(body)}`)
+        this.platform.openExternal(`https://github.com/anyforge/tabbyx/issues/new?body=${encodeURIComponent(body)}`)
     }
 
     enableAnalytics (): void {

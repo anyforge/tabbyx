@@ -1,5 +1,5 @@
 #!/bin/bash
-# Tabby 二次开发环境搭建（含国内网络绕行）
+# TabbyX 二次开发环境搭建（含国内网络绕行）
 # 用法: bash setup-dev.sh
 set -e
 cd "$(dirname "$0")"
@@ -41,10 +41,14 @@ yarn build
 
 echo
 echo "===================================================="
-echo " 完成。启动 Tabby："
-echo "   yarn start          # 开发模式（TABBY_DEV=1，带 DevTools）"
+echo " 完成。启动 TabbyX："
+echo "   TABBY_DEV=1 ./node_modules/.bin/electron app"
+echo
+echo " 注意：不要用 'yarn start'（它带 -d --inspect，DevTools 前端需从"
+echo " chrome-devtools-frontend.appspot.com 拉取，离线/被墙时会异常退出）。"
+echo " 上面这条干净命令已验证可稳定启动。"
 echo
 echo " 改前端代码时开两个终端："
 echo "   yarn watch          # 终端 A：webpack 监听重编译"
-echo "   yarn start          # 终端 B：启动 app，改完 Cmd+R 刷新"
+echo "   TABBY_DEV=1 ./node_modules/.bin/electron app   # 终端 B：改完 Cmd+R 刷新"
 echo "===================================================="

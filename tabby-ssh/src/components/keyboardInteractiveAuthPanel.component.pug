@@ -12,14 +12,22 @@
         ) {{part.text}}
         span(*ngIf='!part.url') {{part.text}}
 
-input.form-control.mt-2(
-    #input,
-    autofocus,
-    [type]='shouldEcho() ? "text" : "password"',
-    placeholder='Response',
-    (keyup.enter)='next()',
-    [(ngModel)]='prompt.responses[step]'
-)
+.input-group.mt-2
+    input.form-control(
+        #input,
+        autofocus,
+        [type]='shouldEcho() || showPassword ? "text" : "password"',
+        placeholder='Response',
+        (keyup.enter)='next()',
+        [(ngModel)]='prompt.responses[step]'
+    )
+    button.btn.btn-secondary(
+        *ngIf='isPassword() && !shouldEcho()',
+        type='button',
+        (click)='showPassword = !showPassword',
+        (mousedown)='$event.preventDefault()'
+    )
+        i.far([class]="showPassword ? 'fa-eye-slash' : 'fa-eye'")
 
 .d-flex.mt-3
     checkbox(

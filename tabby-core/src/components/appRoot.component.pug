@@ -96,6 +96,29 @@ title-bar(
                     (click)='updater.update()'
                 ) !{require('../icons/gift.svg')}
 
+            .d-flex.background(
+                ngbDropdown,
+                container='body',
+                #tabsDropdown='ngbDropdown'
+            )
+                button.btn.btn-secondary.btn-tab-bar(
+                    *ngIf='app.tabs.length > 0',
+                    [ngbTooltip]='"Open tabs"|translate',
+                    ngbDropdownToggle
+                ) !{require('../icons/menu.svg')}
+                .dropdown-menu.tabs-menu(
+                    ngbDropdownMenu
+                )
+                    button.dropdown-item(
+                        *ngFor='let t of app.tabs; let idx = index',
+                        ngbDropdownItem,
+                        [class.active]='t == app.activeTab',
+                        (click)='app.selectTab(t)'
+                    )
+                        span.tab-index(*ngIf='!config.store.terminal.hideTabIndex') {{idx + 1}}
+                        span.tab-name {{t.customTitle || t.title}}
+                        i.fas.fa-check.tab-check(*ngIf='t == app.activeTab')
+
             window-controls.background(
                 *ngIf='config.store.appearance.frame == "thin" \
                 && config.store.appearance.tabsLocation !== "left" \

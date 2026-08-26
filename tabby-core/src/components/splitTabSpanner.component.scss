@@ -15,4 +15,34 @@
         width: 10px;
         margin-left: -5px;
     }
+
+    // 1px 细分割线（居中），10px 热区仍可拖动
+    &::after {
+        content: '';
+        position: absolute;
+        background: var(--theme-secondary);
+        opacity: .7;
+        transition: 0.125s background, 0.125s opacity;
+    }
+
+    &.v::after {
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 1px;
+        margin-top: -.5px;
+    }
+
+    &.h::after {
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        margin-left: -.5px;
+    }
+
+    &:hover::after, &.active::after {
+        background: var(--theme-primary);
+        opacity: 1;
+    }
 }

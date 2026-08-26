@@ -25,6 +25,7 @@ export class KeyboardInteractiveAuthComponent implements OnInit {
     @Output() done = new EventEmitter()
     @ViewChild('input') input: ElementRef
     remember = false
+    showPassword = false
 
     constructor (
         private passwordStorage: PasswordStorageService,

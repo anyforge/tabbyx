@@ -12,6 +12,7 @@ import { Config, ConfigSyncService } from '../services/configSync.service'
 })
 export class ConfigSyncSettingsTabComponent extends BaseComponent {
     connectionSuccessful: boolean|null = null
+    showToken = false
     connectionError: Error|null = null
     configs: Config[]|null = null
 
@@ -136,14 +137,14 @@ export class ConfigSyncSettingsTabComponent extends BaseComponent {
 
     openSyncHost () {
         if (this.config.store.configSync.host === 'https://api.tabby.sh') {
-            this.platform.openExternal('https://app.tabby.sh')
+            this.platform.openExternal('https://github.com/anyforge/tabbyx')
         } else {
             this.platform.openExternal(this.config.store.configSync.host)
         }
     }
 
     openTabbyWebInfo () {
-        this.platform.openExternal('https://github.com/Eugeny/tabby-web')
+        this.platform.openExternal('https://github.com/anyforge/tabbyx-web')
     }
 
 }

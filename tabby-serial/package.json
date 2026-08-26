@@ -1,7 +1,7 @@
 {
   "name": "tabby-serial",
   "version": "1.0.231-nightly.0",
-  "description": "Serial connections for Tabby",
+  "description": "Serial connections for TabbyX",
   "keywords": [
     "tabby-builtin-plugin"
   ],
@@ -15,7 +15,7 @@
     "dist",
     "typings"
   ],
-  "author": "Tabby Developers",
+  "author": "TabbyX Developers",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "22",

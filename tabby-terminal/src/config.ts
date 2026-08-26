@@ -70,7 +70,7 @@ export class TerminalConfigProvider extends ConfigProvider {
     platformDefaults = {
         [Platform.macOS]: {
             terminal: {
-                font: 'Menlo',
+                font: 'JetBrainsMono Nerd Font',
             },
             hotkeys: {
                 'ctrl-c': ['Ctrl-C'],
