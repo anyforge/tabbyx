@@ -1,5 +1,7 @@
 name: Package-Build
 on: [push, pull_request]
+permissions:
+  contents: write
 jobs:
   Lint:
     runs-on: ubuntu-24.04
@@ -84,7 +86,7 @@ jobs:
       if: github.event_name == 'push' && (github.ref_protected || startsWith(github.ref, 'refs/tags'))
       env:
         ARCH: ${{matrix.arch}}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
         CSC_LINK: ${{ secrets.CSC_LINK }}
         CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -237,6 +239,7 @@ jobs:
       if: "!(github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && vars.SM_HOST != '')"
       env:
         ARCH: ${{matrix.arch}}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
     - name: Build and sign packages
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && vars.SM_HOST != ''
@@ -258,7 +261,7 @@ jobs:
         node scripts/build-windows.mjs
       env:
         ARCH: ${{matrix.arch}}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
         SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
         SM_PUBLISHER_NAME: ${{ secrets.SM_PUBLISHER_NAME }}
         SM_API_KEY: ${{ secrets.SM_API_KEY }}
