@@ -230,7 +230,7 @@ jobs:
 
     - name: Upload packages to packagecloud.io
       uses: TykTechnologies/packagecloud-action@7add92bc6a06914be404cf7fa00a6ccb302e6ac5 # main
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') && secrets.PACKAGECLOUD_TOKEN != ''
       env:
         PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
       with:
@@ -310,7 +310,7 @@ jobs:
         echo "PATH=$newPath" >> $env:GITHUB_ENV
 
     - name: Decode certificate
-      if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags'))
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && secrets.SM_API_KEY != ''
       env:
         SM_CLIENT_CERT_FILE_B64: ${{ secrets.SM_CLIENT_CERT_FILE_B64 }}
       run: |
@@ -320,7 +320,7 @@ jobs:
       shell: bash
 
     - name: Setup Software Trust Manager
-      if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags'))
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && secrets.SM_API_KEY != ''
       uses: digicert/code-signing-software-trust-action@cb502242630f8556eb815a4f9c1e8c64d2a2d2a3 # v1.0.0
       env:
         SM_HOST: ${{ vars.SM_HOST }}
@@ -329,7 +329,7 @@ jobs:
         SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
 
     - name: smctl diagnostics
-      if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags'))
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && secrets.SM_API_KEY != ''
       shell: powershell
       env:
         SM_LOG_LEVEL: TRACE
@@ -391,12 +391,12 @@ jobs:
 
     - name: Build packages without signing
       run: node scripts/build-windows.mjs
-      if: "! (github.event_name == 'push' && (startsWith(github.ref, 'refs/tags')))"
+      if: "!(github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && secrets.SM_API_KEY != '')"
       env:
         ARCH: ${{matrix.arch}}
 
     - name: Build and sign packages
-      if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags'))
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && secrets.SM_API_KEY != ''
       shell: powershell
       run: |
         Get-FileHash $env:SM_CLIENT_CERT_FILE -Algorithm MD5
