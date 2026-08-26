@@ -17,15 +17,13 @@ builder({
         extraMetadata: {
             version: vars.version,
         },
-        publish: process.env.KEYGEN_TOKEN ? [
-            vars.keygenConfig,
+        publish: [
             {
                 provider: 'github',
-                channel: `latest-${process.env.ARCH}`,
             },
-        ] : undefined,
+        ],
     },
-    publish: (process.env.KEYGEN_TOKEN && isTag) ? 'always' : 'never',
+    publish: isTag ? 'always' : 'never',
 }).catch(e => {
     console.error(e)
     process.exit(1)

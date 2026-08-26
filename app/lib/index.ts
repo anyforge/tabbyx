@@ -2,9 +2,31 @@
 import { logMainError } from './errors'
 
 import { app, ipcMain, Menu, dialog } from 'electron'
+import * as os from 'os'
+import * as path from 'path'
+import * as fs from 'fs'
 
 // set userData Path on portable version
 import './portable'
+
+// 统一 macOS/Linux 配置目录到 ~/.config/tabbyx/（XDG 规范；Linux 默认已是）
+if (process.platform === 'darwin') {
+    const xdgDataDir = path.join(os.homedir(), '.config', 'tabbyx')
+    const legacyDataDir = path.join(os.homedir(), 'Library', 'Application Support', 'tabbyx')
+    app.setPath('userData', xdgDataDir)
+
+    // 一次性迁移旧 macOS 配置：~/Library/Application Support/tabbyx/config.yaml → ~/.config/tabbyx/config.yaml
+    try {
+        const newConfig = path.join(xdgDataDir, 'config.yaml')
+        const legacyConfig = path.join(legacyDataDir, 'config.yaml')
+        if (!fs.existsSync(newConfig) && fs.existsSync(legacyConfig)) {
+            fs.mkdirSync(xdgDataDir, { recursive: true })
+            fs.copyFileSync(legacyConfig, newConfig)
+        }
+    } catch (err) {
+        console.error('Failed to migrate config directory:', err)
+    }
+}
 
 // set defaults of environment variables
 import 'dotenv/config'
@@ -35,13 +57,13 @@ process.mainModule = module
 
 const application = new Application(configStore)
 
-// Register tabby:// URL scheme
+// Register tabbyx:// URL scheme
 if (process.defaultApp) {
     if (process.argv.length >= 2) {
-        app.setAsDefaultProtocolClient('tabby', process.execPath, [process.argv[1]])
+        app.setAsDefaultProtocolClient('tabbyx', process.execPath, [process.argv[1]])
     }
 } else {
-    app.setAsDefaultProtocolClient('tabby')
+    app.setAsDefaultProtocolClient('tabbyx')
 }
 
 ipcMain.on('app:new-window', () => {
@@ -110,7 +132,7 @@ app.on('ready', async () => {
         window.focus()
     } catch (err) {
         logMainError('Failed to open window', err)
-        dialog.showErrorBox('Tabby failed to start', String(err?.stack ?? err))
+        dialog.showErrorBox('TabbyX failed to start', String(err?.stack ?? err))
         app.exit(1)
     }
 })

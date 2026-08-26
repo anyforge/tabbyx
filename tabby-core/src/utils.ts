@@ -22,6 +22,12 @@ export function getCSSFontFamily (config: any): string {
     if (config.terminal.fallbackFont) {
         fonts.push(config.terminal.fallbackFont)
     }
+    // Apple 私有区字符（U+F8FF Apple logo 等）在 macOS 上应由苹果系统字体渲染；
+    // 否则会被 monospace-fallback（Nerd Font 版 SourceCodePro）的 π 图标抢走。
+    // 把 SF Mono 插到 monospace-fallback 之前，让这些字符回落到系统字体。
+    if (typeof navigator !== 'undefined' && /Macintosh/.test(navigator.userAgent)) {
+        fonts.push('SF Mono')
+    }
     fonts.push('monospace-fallback')
     fonts.push('monospace')
     fonts = fonts.map(x => `"${x}"`)

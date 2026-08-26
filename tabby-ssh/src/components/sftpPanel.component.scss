@@ -33,26 +33,33 @@
         font-weight: bold;
     }
 
+    .list-group-item {
+        padding: 3px 8px;
+        font-size: 12px;
+    }
+
     .list-group-item-action {
         &:hover {
             background: rgba(white, .05);
         }
     }
 
+    .item-name {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
     .mode, .size, .date {
         font-family: monospace;
-        opacity: .5;
-        font-size: 12px;
+        opacity: .55;
+        font-size: 11px;
         text-align: right;
-        margin-left: 20px;
-    }
-
-    .size {
-        width: 100px;
-    }
-
-    .date {
-        width: 200px;
+        margin-left: 12px;
+        flex: none;
+        white-space: nowrap;
     }
 }
 

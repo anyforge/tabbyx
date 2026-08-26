@@ -121,8 +121,8 @@ msgid "Application settings"
 msgstr "Definições da aplicação"
 
 #: tabby-web/src/services/hostWindow.service.ts:19
-msgid "Are you sure you want to close Tabby? You can disable this prompt in Settings -> Window."
-msgstr "Tem a certeza que quer fechar o Tabby? Pode desativar este aviso em Configurações -> Janela."
+msgid "Are you sure you want to close TabbyX? You can disable this prompt in Settings -> Window."
+msgstr "Tem a certeza que quer fechar o TabbyX? Pode desativar este aviso em Configurações -> Janela."
 
 #: tabby-core/src/services/config.service.ts:440
 msgid "Are you sure?"
@@ -968,8 +968,8 @@ msgid "Get"
 msgstr "Obter"
 
 #: locale/tmp-html/tabby-settings/src/components/configSyncSettingsTab.component.html:18
-msgid "Get it from the Tabby Web settings window"
-msgstr "Obtenha-o da janela de configurações da Tabby Web"
+msgid "Get it from the TabbyX Web settings window"
+msgstr "Obtenha-o da janela de configurações da TabbyX Web"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:29
 msgid "Gives the window a blurred transparent background"
@@ -992,11 +992,11 @@ msgid "Hacks"
 msgstr ""
 
 #: locale/tmp-html/tabby-core/src/components/welcomeTab.component.html:33
-msgid "Help track the number of Tabby installs across the world!"
-msgstr "Ajude a seguir o número de instalações do Tabby pelo mundo!"
+msgid "Help track the number of TabbyX installs across the world!"
+msgstr "Ajude a seguir o número de instalações do TabbyX pelo mundo!"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:50
-msgid "Help translate Tabby"
+msgid "Help translate TabbyX"
 msgstr ""
 
 #: tabby-terminal/src/components/streamProcessingSettings.component.ts:32
@@ -1051,7 +1051,7 @@ msgid "Hotkeys"
 msgstr "Teclas de atalho"
 
 #: locale/tmp-html/tabby-settings/src/components/profilesSettingsTab.component.html:83
-msgid "How Tabby presents itself through environment vars"
+msgid "How TabbyX presents itself through environment vars"
 msgstr ""
 
 #: locale/tmp-html/tabby-ssh/src/components/sshProfileSettings.component.html:24
@@ -1113,8 +1113,8 @@ msgid "Installed"
 msgstr "Instalado"
 
 #: tabby-electron/src/services/updater.service.ts:131
-msgid "Installing the update will close all tabs and restart Tabby."
-msgstr "Ao instalar a atualização, todos os separadores serão fechadas e o Tabby reiniciará."
+msgid "Installing the update will close all tabs and restart TabbyX."
+msgstr "Ao instalar a atualização, todos os separadores serão fechadas e o TabbyX reiniciará."
 
 #: tabby-terminal/src/hotkeys.ts:66
 msgid "Intelligent Ctrl-C (copy/abort)"
@@ -1200,8 +1200,8 @@ msgstr "Iniciar o WinSCP para a sessão SSH atual"
 
 #: locale/tmp-html/tabby-ssh/src/components/sftpPanel.component.html:16
 #: locale/tmp-html/tabby-ssh/src/components/sshTab.component.html:7
-msgid "Learn how to allow Tabby to detect remote shell's working directory."
-msgstr "Aprenda a permitir que o Tabby detecte o diretório de trabalho da shell remota."
+msgid "Learn how to allow TabbyX to detect remote shell's working directory."
+msgstr "Aprenda a permitir que o TabbyX detecte o diretório de trabalho da shell remota."
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:134
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:76
@@ -1658,8 +1658,8 @@ msgid "Purple"
 msgstr "Roxo"
 
 #: locale/tmp-html/tabby-settings/src/components/vaultSettingsTab.component.html:38
-msgid "Puts all of Tabby's configuration into the vault"
-msgstr "Colocar todas as configurações do Tabby no cofre"
+msgid "Puts all of TabbyX's configuration into the vault"
+msgstr "Colocar todas as configurações do TabbyX no cofre"
 
 #: tabby-core/src/index.ts:219
 #: tabby-core/src/services/profiles.service.ts:295
@@ -1951,8 +1951,8 @@ msgid "Set password"
 msgstr "Definir palavra-passe"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalSettingsTab.component.html:168
-msgid "Set Tabby as %COMSPEC%"
-msgstr "Definir Tabby como %COMSPEC%"
+msgid "Set TabbyX as %COMSPEC%"
+msgstr "Definir TabbyX como %COMSPEC%"
 
 #: locale/tmp-html/tabby-settings/src/components/profilesSettingsTab.component.html:69
 msgid "Set to 0 to disable recent profiles"
@@ -2226,11 +2226,11 @@ msgid "Tab activity"
 msgstr "Atividade do separador"
 
 #: locale/tmp-html/tabby-core/src/components/safeModeModal.component.html:3
-msgid "Tabby could not start with your plugins, so all third party plugins have been disabled in this session. The error was:"
+msgid "TabbyX could not start with your plugins, so all third party plugins have been disabled in this session. The error was:"
 msgstr ""
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:41
-msgid "Tabby news and updates on Twitter"
+msgid "TabbyX news and updates on Twitter"
 msgstr ""
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:123
@@ -2267,8 +2267,8 @@ msgid "Terminal identification"
 msgstr ""
 
 #: locale/tmp-html/tabby-core/src/components/welcomeTab.component.html:7
-msgid "Thank you for downloading Tabby!"
-msgstr "Obrigado por descarregar o Tabby!"
+msgid "Thank you for downloading TabbyX!"
+msgstr "Obrigado por descarregar o TabbyX!"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:5
 msgid "Theme"
@@ -2311,7 +2311,7 @@ msgid "Toggle terminal window"
 msgstr "Ativar/desativar a janela"
 
 #: locale/tmp-html/tabby-core/src/components/welcomeTab.component.html:40
-msgid "Toggles the Tabby window visibility"
+msgid "Toggles the TabbyX window visibility"
 msgstr "Ativa/desativa a visibilidade da janela"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:130
@@ -2461,8 +2461,8 @@ msgid "Warning: remote host's key has suddenly changed!"
 msgstr "Aviso: a chave do host remoto mudou repentinamente!"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:67
-msgid "We're only tracking your Tabby and OS versions."
-msgstr "Estamos rastreando apenas as suas versões de Tabby e de sistema operativo."
+msgid "We're only tracking your TabbyX and OS versions."
+msgstr "Estamos rastreando apenas as suas versões de TabbyX e de sistema operativo."
 
 #: tabby-core/src/components/welcomeTab.component.ts:25
 msgid "Welcome"

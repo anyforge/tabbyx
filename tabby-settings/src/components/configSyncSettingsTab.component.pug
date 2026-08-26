@@ -23,14 +23,20 @@ ul.nav-tabs(ngbNav, #nav='ngbNav')
             .form-line(*ngIf='config.store.configSync.host')
                 .header
                     .title(translate) Secret sync token
-                    .description(translate) Get it from the Tabby Web settings window
+                    .description(translate) Get it from the TabbyX Web settings window
 
                 .input-group
                     input.form-control(
-                        type='password',
+                        [type]='showToken ? "text" : "password"',
                         [(ngModel)]='config.store.configSync.token',
                         (keydown.enter)='config.save(); testConnection()'
                     )
+                    button.btn.btn-secondary(
+                        type='button',
+                        (click)='showToken = !showToken',
+                        (mousedown)='$event.preventDefault()'
+                    )
+                        i.far([class]="showToken ? 'fa-eye-slash' : 'fa-eye'")
                     .input-group-text(*ngIf='config.store.configSync.token')
                         i.fas.fa-fw.fa-circle-notch.fa-spin.text-warning(*ngIf='connectionSuccessful === null')
                         i.fas.fa-fw.fa-check.text-success(*ngIf='connectionSuccessful')
@@ -38,7 +44,7 @@ ul.nav-tabs(ngbNav, #nav='ngbNav')
 
             .alert.alert-info.d-flex.align-items-center
                 .me-auto
-                    span(translate) Config sync requires an instance of the Tabby Web service.
+                    span(translate) Config sync requires an instance of the TabbyX Web service.
                     a.ml-1((click)='openTabbyWebInfo()', href='#', translate) Learn more
 
             ng-container(*ngIf='config.store.configSync.token')

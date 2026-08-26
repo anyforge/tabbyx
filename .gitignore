@@ -37,3 +37,8 @@ sentry-symbols.js
 
 crowdin.yml
 .crowdin.env
+
+# Locally compiled build artifacts (regenerated on build)
+main.js
+app/lib/*.js
+app/lib/*.js.map

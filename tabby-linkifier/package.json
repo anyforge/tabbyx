@@ -1,7 +1,7 @@
 {
   "name": "tabby-linkifier",
   "version": "1.0.231-nightly.0",
-  "description": "Makes URLs, IPs and file paths clickable in Tabby",
+  "description": "Makes URLs, IPs and file paths clickable in TabbyX",
   "keywords": [
     "tabby-builtin-plugin"
   ],
@@ -15,7 +15,7 @@
     "dist",
     "typings"
   ],
-  "author": "Tabby Developers",
+  "author": "TabbyX Developers",
   "license": "MIT",
   "devDependencies": {
     "@xterm/addon-web-links": "^0.10.0",

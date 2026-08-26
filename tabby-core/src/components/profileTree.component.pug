@@ -26,6 +26,16 @@
     )
         i.fas.fa-fw.fa-folder-plus
 
+    .collapsed-spacer
+
+    button.icon-btn(
+        (click)='openSettings()',
+        [ngbTooltip]='"Settings"|translate',
+        container='body',
+        placement='right'
+    )
+        i.fas.fa-fw.fa-gear
+
 //- Expanded sidebar
 .tree-panel.h-100.d-flex.flex-column(*ngIf='!sidebarCollapsed')
     .tree-toolbar.d-flex.align-items-center(
@@ -63,14 +73,29 @@
 
     .profile-tree
         .d-flex.flex-column.profile-tree-container(
+            (dragover)='onRootDragOver($event)',
+            (dragleave)='onRootDragLeave($event)',
+            (drop)='onRootDrop($event)',
+            [class.drag-over]='dragOverTargetId === "root"',
             (contextmenu)='rootContextMenu($event)'
         )
+
+            //- 无分组的用户连接，直接挂在树根
+            ng-container(*ngFor='let profile of rootProfiles')
+                ng-container(*ngTemplateOutlet='profileItem; context: {$implicit: profile, depth: 0, group: undefined}')
 
             ng-container(*ngFor='let group of rootGroups')
                 ng-container(*ngTemplateOutlet='recursiveGroup; context: {$implicit: group, depth: 0}')
 
             ng-template(#recursiveGroup let-group let-depth='depth')
                 a.tree-item.tree-group(
+                    draggable='true',
+                    (dragstart)='onGroupDragStart($event, group)',
+                    (dragover)='onGroupDragOver($event, group)',
+                    (drop)='onGroupDrop($event, group)',
+                    (dragend)='onDragEnd()',
+                    [class.dragging]='dragSourceId === group.id',
+                    [class.drag-over]='dragOverTargetId === group.id',
                     (click)='toggleGroupCollapse(group)',
                     [style.paddingLeft.px]='depth * 16',
                     (contextmenu)='groupContextMenu(group, $event)',
@@ -81,7 +106,7 @@
                         .fa.fa-fw.fas.fa-chevron-down.ms-1.text-muted(*ngIf='!group.collapsed')
                     .fw-20
                         profile-icon.ms-1([icon]='group.icon ?? "far fa-folder"', [color]='group?.color')
-                    span.item-label.ms-2.me-auto {{ group.name || ("Ungrouped"|translate) }}
+                    span.item-label.ms-2.me-auto {{ group.name }}
 
                     .actions
                         .action(
@@ -114,40 +139,60 @@
 
                 ng-container(*ngIf='!group.collapsed')
                     ng-container(*ngFor='let profile of group.profiles')
-                        a.tree-item(
-                            (dblclick)='launchProfile(profile)',
-                            [style.paddingLeft.px]='(depth + 1) * 16',
-                            (contextmenu)='profileContextMenu(profile, $event)',
-                            href='#'
-                        )
-                            .fw-20
-                                profile-icon.ms-1([icon]='profile.icon', [color]='profile.color')
-                            span.item-label.ms-2.no-wrap {{ profile.name }}
-
-                            .actions
-                                .action(
-                                    (click)='$event.preventDefault(); $event.stopPropagation(); launchProfile(profile)',
-                                    [ngbTooltip]='"Run"|translate',
-                                    container='body'
-                                )
-                                    .fa.fa-fw.fas.fa-play
-                                .action(
-                                    *ngIf='!(profile.isBuiltin ?? profile.isTemplate)',
-                                    (click)='$event.preventDefault(); $event.stopPropagation(); editProfile(profile)',
-                                    [ngbTooltip]='"Edit profile"|translate',
-                                    container='body'
-                                )
-                                    .fa.fa-fw.fas.fa-pen
-                                .action.action-danger(
-                                    *ngIf='!(profile.isBuiltin ?? profile.isTemplate)',
-                                    (click)='$event.preventDefault(); $event.stopPropagation(); deleteProfile(profile)',
-                                    [ngbTooltip]='"Delete"|translate',
-                                    container='body'
-                                )
-                                    .fa.fa-fw.fas.fa-trash
+                        ng-container(*ngTemplateOutlet='profileItem; context: {$implicit: profile, depth: depth + 1, group: group}')
 
                     ng-container(*ngFor='let child of group.children')
                         ng-container(*ngTemplateOutlet='recursiveGroup; context: {$implicit: child, depth: depth + 1}')
+
+            ng-template(#profileItem let-profile let-depth='depth' let-group='group')
+                a.tree-item(
+                    draggable='true',
+                    (dragstart)='onProfileDragStart($event, profile)',
+                    (dragover)='onProfileDragOver($event, group)',
+                    (drop)='onProfileDrop($event, group)',
+                    (dragend)='onDragEnd()',
+                    [class.dragging]='dragSourceId === profile.id',
+                    (dblclick)='launchProfile(profile)',
+                    [style.paddingLeft.px]='depth * 16',
+                    (contextmenu)='profileContextMenu(profile, $event)',
+                    href='#'
+                )
+                    .fw-20
+                        //- 空占位：与文件夹的 chevron 列对齐，让连接名称比文件夹标题缩进一级
+                    .fw-20
+                        profile-icon.ms-1([icon]='profile.icon', [color]='profile.color')
+                    span.item-label.ms-2.no-wrap {{ profile.name }}
+
+                    .actions
+                        .action(
+                            (click)='$event.preventDefault(); $event.stopPropagation(); launchProfile(profile)',
+                            [ngbTooltip]='"Run"|translate',
+                            container='body'
+                        )
+                            .fa.fa-fw.fas.fa-play
+                        .action(
+                            *ngIf='!(profile.isBuiltin ?? profile.isTemplate)',
+                            (click)='$event.preventDefault(); $event.stopPropagation(); editProfile(profile)',
+                            [ngbTooltip]='"Edit profile"|translate',
+                            container='body'
+                        )
+                            .fa.fa-fw.fas.fa-pen
+                        .action.action-danger(
+                            *ngIf='!(profile.isBuiltin ?? profile.isTemplate)',
+                            (click)='$event.preventDefault(); $event.stopPropagation(); deleteProfile(profile)',
+                            [ngbTooltip]='"Delete"|translate',
+                            container='body'
+                        )
+                            .fa.fa-fw.fas.fa-trash
+
+    .tree-footer
+        button.settings-btn(
+            (click)='openSettings()',
+            [ngbTooltip]='"Settings"|translate',
+            container='body'
+        )
+            i.fas.fa-fw.fa-gear
+            span.settings-label(translate) Settings
 
 .grabber(
     *ngIf='!sidebarCollapsed',

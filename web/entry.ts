@@ -22,7 +22,7 @@ interface BootstrapOptions {
     connector: any
 }
 
-window['bootstrapTabby'] = async function bootstrap (options: BootstrapOptions): Promise<NgModuleRef<any>> {
+window['bootstrapTabbyX'] = async function bootstrap (options: BootstrapOptions): Promise<NgModuleRef<any>> {
     window.parent.postMessage('request-connector', '*')
 
     const pluginModules = []

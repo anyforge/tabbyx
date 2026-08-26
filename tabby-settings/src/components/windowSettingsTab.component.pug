@@ -22,6 +22,19 @@ h3.mb-3(translate) Window
         step='0.1'
     )
 
+.form-line(*ngIf='config.store.showProfileTree')
+    .header
+        .title(translate) Sidebar width
+        .description(translate) Width of the connection tree on the left
+    input(
+        type='range',
+        [(ngModel)]='config.store.appearance.profileTreeWidth',
+        (mouseup)='saveConfiguration()',
+        min='200',
+        max='600',
+        step='10'
+    )
+
 .form-line(*ngIf='hostApp.platform === Platform.Web')
     .header
         .title(translate) Ask before closing the browser tab
@@ -124,7 +137,7 @@ h3.mb-3(translate) Window
 .form-line(*ngIf='hostApp.platform !== Platform.Web && hostApp.platform !== Platform.Linux')
     .header
         .title(translate) Hide tray icon
-        .description(translate) Hide Tabby from tray or menu bar.
+        .description(translate) Hide TabbyX from tray or menu bar.
     toggle(
         [(ngModel)]='config.store.hideTray',
         (ngModelChange)='saveConfiguration(true)'

@@ -85,7 +85,6 @@ jobs:
       env:
         ARCH: ${{matrix.arch}}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        KEYGEN_TOKEN: ${{ secrets.KEYGEN_TOKEN }}
         CSC_LINK: ${{ secrets.CSC_LINK }}
         CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -100,15 +99,6 @@ jobs:
       env:
         ARCH: ${{matrix.arch}}
         # DEBUG: electron-builder,electron-builder:*
-
-    - name: Upload symbols
-      run: |
-        sudo npm install -g @sentry/cli --unsafe-perm
-        ./scripts/sentry-upload.mjs
-      env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
     - name: Package artifacts
       run: |
@@ -230,24 +220,13 @@ jobs:
       run: scripts/build-linux.mjs
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        KEYGEN_TOKEN: ${{ secrets.KEYGEN_TOKEN }}
         USE_HARD_LINKS: false
         USE_SYSTEM_FPM: true
         # DEBUG: electron-builder,electron-builder:*
 
     - name: Build web resources (amd64 only)
-      run: zsh -c 'tar czf tabby-web.tar.gz (tabby-*|web)/dist'
+      run: zsh -c 'tar czf tabbyx-web.tar.gz (tabby-*|web)/dist'
       if: matrix.build-arch == 'x64'
-
-    - name: Upload symbols (amd64 only)
-      run: |
-        sudo npm install -g @sentry/cli --unsafe-perm
-        ./scripts/sentry-upload.mjs
-      if: matrix.build-arch == 'x64'
-      env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
     - name: Upload packages to packagecloud.io
       uses: TykTechnologies/packagecloud-action@7add92bc6a06914be404cf7fa00a6ccb302e6ac5 # main
@@ -255,7 +234,7 @@ jobs:
       env:
         PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
       with:
-        repo: 'eugeny/tabby'
+        repo: 'anyforge/tabbyx'
         dir: 'dist'
         rpmvers: 'el/9 el/8 ol/6 ol/7'
         debvers: 'ubuntu/bionic ubuntu/focal ubuntu/hirsute ubuntu/impish ubuntu/jammy ubuntu/kinetic ubuntu/noble ubuntu/oracular debian/jessie debian/stretch debian/buster debian/bullseye debian/bookworm debian/trixie debian/forky debian/duke debian/forky debian/sid'
@@ -294,7 +273,7 @@ jobs:
       name: Upload web tarball (amd64 only)
       with:
         name: Web tarball
-        path: tabby-web.tar.gz
+        path: tabbyx-web.tar.gz
       if: matrix.build-arch == 'x64'
 
   Windows-Build:
@@ -437,7 +416,6 @@ jobs:
       env:
         ARCH: ${{matrix.arch}}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        KEYGEN_TOKEN: ${{ secrets.KEYGEN_TOKEN }}
         SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
         SM_PUBLISHER_NAME: ${{ secrets.SM_PUBLISHER_NAME }}
         SM_API_KEY: ${{ secrets.SM_API_KEY }}
@@ -446,15 +424,6 @@ jobs:
         SM_KEYPAIR_ALIAS: ${{ vars.SM_KEYPAIR_ALIAS }}
         SM_LOG_LEVEL: TRACE
         # DEBUG: electron-builder,electron-builder:*
-
-    - name: Upload symbols
-      run: |
-        npm install @sentry/cli
-        node scripts/sentry-upload.mjs
-      env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
     - name: Add VC Runtime to portable zip
       shell: powershell

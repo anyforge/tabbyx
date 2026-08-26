@@ -13,7 +13,7 @@ export interface RecoveryToken {
  * Extend to enable recovery for your custom tab.
  * This works in conjunction with [[getRecoveryToken()]]
  *
- * Tabby will try to find any [[TabRecoveryProvider]] that is able to process
+ * TabbyX will try to find any [[TabRecoveryProvider]] that is able to process
  * the recovery token previously returned by [[getRecoveryToken]].
  *
  * Recommended token format:

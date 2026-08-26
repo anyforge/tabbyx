@@ -350,7 +350,7 @@ export class BaseTerminalTabComponent<P extends BaseTerminalProfile> extends Bas
         })
 
         // Check if the the WebGL renderer is compatible with xterm.js:
-        // - https://github.com/Eugeny/tabby/issues/8884
+        // - https://github.com/anyforge/tabbyx/issues/8884
         // - https://github.com/microsoft/vscode/issues/190195
         // - https://github.com/xtermjs/xterm.js/issues/4665
         // - https://bugs.chromium.org/p/chromium/issues/detail?id=1476475

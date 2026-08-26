@@ -121,8 +121,8 @@ msgid "Application settings"
 msgstr "Налаштування"
 
 #: tabby-web/src/services/hostWindow.service.ts:19
-msgid "Are you sure you want to close Tabby? You can disable this prompt in Settings -> Window."
-msgstr "Ви впевнені, що хочете закрити Tabby? Це попередження можна вимкнути в Налаштування -> Вікно."
+msgid "Are you sure you want to close TabbyX? You can disable this prompt in Settings -> Window."
+msgstr "Ви впевнені, що хочете закрити TabbyX? Це попередження можна вимкнути в Налаштування -> Вікно."
 
 #: tabby-core/src/services/config.service.ts:440
 msgid "Are you sure?"
@@ -968,8 +968,8 @@ msgid "Get"
 msgstr "Отримати"
 
 #: locale/tmp-html/tabby-settings/src/components/configSyncSettingsTab.component.html:18
-msgid "Get it from the Tabby Web settings window"
-msgstr "Скопіюйте з вікна налаштувань web-версії Tabby"
+msgid "Get it from the TabbyX Web settings window"
+msgstr "Скопіюйте з вікна налаштувань web-версії TabbyX"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:29
 msgid "Gives the window a blurred transparent background"
@@ -992,12 +992,12 @@ msgid "Hacks"
 msgstr "Проблеми"
 
 #: locale/tmp-html/tabby-core/src/components/welcomeTab.component.html:33
-msgid "Help track the number of Tabby installs across the world!"
-msgstr "Допоможіть відстежувати скільки встановлено Tabby по всьому світу!"
+msgid "Help track the number of TabbyX installs across the world!"
+msgstr "Допоможіть відстежувати скільки встановлено TabbyX по всьому світу!"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:50
-msgid "Help translate Tabby"
-msgstr "Допоможіть перекласти Tabby"
+msgid "Help translate TabbyX"
+msgstr "Допоможіть перекласти TabbyX"
 
 #: tabby-terminal/src/components/streamProcessingSettings.component.ts:32
 #: tabby-terminal/src/components/streamProcessingSettings.component.ts:45
@@ -1051,8 +1051,8 @@ msgid "Hotkeys"
 msgstr "Гарячі клавіші"
 
 #: locale/tmp-html/tabby-settings/src/components/profilesSettingsTab.component.html:83
-msgid "How Tabby presents itself through environment vars"
-msgstr "Як Tabby представляє себе за допомогою змінних оточення"
+msgid "How TabbyX presents itself through environment vars"
+msgstr "Як TabbyX представляє себе за допомогою змінних оточення"
 
 #: locale/tmp-html/tabby-ssh/src/components/sshProfileSettings.component.html:24
 msgid "HTTP proxy"
@@ -1113,8 +1113,8 @@ msgid "Installed"
 msgstr "Встановлено"
 
 #: tabby-electron/src/services/updater.service.ts:131
-msgid "Installing the update will close all tabs and restart Tabby."
-msgstr "Встановлення оновлення закриє всі вкладки й перезавантажить Tabby."
+msgid "Installing the update will close all tabs and restart TabbyX."
+msgstr "Встановлення оновлення закриє всі вкладки й перезавантажить TabbyX."
 
 #: tabby-terminal/src/hotkeys.ts:66
 msgid "Intelligent Ctrl-C (copy/abort)"
@@ -1200,8 +1200,8 @@ msgstr "Запустити WinSCP для поточної SSH сесії"
 
 #: locale/tmp-html/tabby-ssh/src/components/sftpPanel.component.html:16
 #: locale/tmp-html/tabby-ssh/src/components/sshTab.component.html:7
-msgid "Learn how to allow Tabby to detect remote shell's working directory."
-msgstr "Дізнайтеся, як дозволити Tabby визначати робочий каталог віддаленої оболонки."
+msgid "Learn how to allow TabbyX to detect remote shell's working directory."
+msgstr "Дізнайтеся, як дозволити TabbyX визначати робочий каталог віддаленої оболонки."
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:134
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:76
@@ -1658,8 +1658,8 @@ msgid "Purple"
 msgstr "Фіолетовий"
 
 #: locale/tmp-html/tabby-settings/src/components/vaultSettingsTab.component.html:38
-msgid "Puts all of Tabby's configuration into the vault"
-msgstr "Поміщає конфігурацію Tabby у зашифроване сховище"
+msgid "Puts all of TabbyX's configuration into the vault"
+msgstr "Поміщає конфігурацію TabbyX у зашифроване сховище"
 
 #: tabby-core/src/index.ts:219
 #: tabby-core/src/services/profiles.service.ts:295
@@ -1951,8 +1951,8 @@ msgid "Set password"
 msgstr "Встановити пароль"
 
 #: locale/tmp-html/tabby-terminal/src/components/terminalSettingsTab.component.html:168
-msgid "Set Tabby as %COMSPEC%"
-msgstr "Встановити Tabby як %COMSPEC%"
+msgid "Set TabbyX as %COMSPEC%"
+msgstr "Встановити TabbyX як %COMSPEC%"
 
 #: locale/tmp-html/tabby-settings/src/components/profilesSettingsTab.component.html:69
 msgid "Set to 0 to disable recent profiles"
@@ -2226,12 +2226,12 @@ msgid "Tab activity"
 msgstr "Активність вкладки"
 
 #: locale/tmp-html/tabby-core/src/components/safeModeModal.component.html:3
-msgid "Tabby could not start with your plugins, so all third party plugins have been disabled in this session. The error was:"
-msgstr "Tabby не зміг запуститися з вашими плагінами, тому всі сторонні плагіни були відключені у цій сесії. Помилка:"
+msgid "TabbyX could not start with your plugins, so all third party plugins have been disabled in this session. The error was:"
+msgstr "TabbyX не зміг запуститися з вашими плагінами, тому всі сторонні плагіни були відключені у цій сесії. Помилка:"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:41
-msgid "Tabby news and updates on Twitter"
-msgstr "Новини та оновлення Tabby у Twitter"
+msgid "TabbyX news and updates on Twitter"
+msgstr "Новини та оновлення TabbyX у Twitter"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:123
 msgid "Tabs"
@@ -2267,8 +2267,8 @@ msgid "Terminal identification"
 msgstr "Ідентифікація терміналу"
 
 #: locale/tmp-html/tabby-core/src/components/welcomeTab.component.html:7
-msgid "Thank you for downloading Tabby!"
-msgstr "Дякуємо що завантажили Tabby!"
+msgid "Thank you for downloading TabbyX!"
+msgstr "Дякуємо що завантажили TabbyX!"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:5
 msgid "Theme"
@@ -2311,8 +2311,8 @@ msgid "Toggle terminal window"
 msgstr "Приховати/показати вікно терміналу"
 
 #: locale/tmp-html/tabby-core/src/components/welcomeTab.component.html:40
-msgid "Toggles the Tabby window visibility"
-msgstr "Перемикає видимість вікна Tabby"
+msgid "Toggles the TabbyX window visibility"
+msgstr "Перемикає видимість вікна TabbyX"
 
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:130
 #: locale/tmp-html/tabby-settings/src/components/windowSettingsTab.component.html:74
@@ -2461,8 +2461,8 @@ msgid "Warning: remote host's key has suddenly changed!"
 msgstr "Попередження: ключ віддаленого хоста раптом змінився!"
 
 #: locale/tmp-html/tabby-settings/src/components/settingsTab.component.html:67
-msgid "We're only tracking your Tabby and OS versions."
-msgstr "Відстежується лише версія ОС і Tabby."
+msgid "We're only tracking your TabbyX and OS versions."
+msgstr "Відстежується лише версія ОС і TabbyX."
 
 #: tabby-core/src/components/welcomeTab.component.ts:25
 msgid "Welcome"

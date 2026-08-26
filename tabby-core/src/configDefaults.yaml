@@ -20,6 +20,10 @@ appearance:
   lastTabClosesWindow: false
   spaciness: 1
   colorSchemeMode: 'dark'
+  profileTreeCollapsed: false
+  profileTreeWidth: 250
+  profileGroupCollapsed:
+    __nonStructural: true
 terminal:
   showBuiltinProfiles: true
   showRecentProfiles: 3
@@ -39,7 +43,7 @@ profileDefaults:
   __nonStructural: true
   ssh:
     disableDynamicTitle: true
-recoverTabs: true
+recoverTabs: false
 enableAnalytics: true
 enableWelcomeTab: true
 electronFlags:

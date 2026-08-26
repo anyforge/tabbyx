@@ -1,7 +1,7 @@
 {
   "name": "tabby-ssh",
   "version": "1.0.231-nightly.0",
-  "description": "SSH connections for Tabby",
+  "description": "SSH connections for TabbyX",
   "keywords": [
     "tabby-builtin-plugin"
   ],
@@ -17,7 +17,7 @@
     "dist",
     "typings"
   ],
-  "author": "Tabby Developers",
+  "author": "TabbyX Developers",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "22",

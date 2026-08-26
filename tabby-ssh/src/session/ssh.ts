@@ -160,6 +160,13 @@ export class SSHSession {
 
     async init (): Promise<void> {
         this.allAuthMethods = [{ type: 'none' }]
+
+        // Auto 模式下，若已保存密码，跳过私钥自动加载，避免反复弹「Private key passphrase」
+        let hasSavedPassword = false
+        if (!this.profile.options.auth && this.profile.options.user) {
+            hasSavedPassword = !!(await this.passwordStorage.loadPassword(this.profile, this.profile.options.user))
+        }
+
         if (!this.profile.options.auth || this.profile.options.auth === 'publicKey') {
             if (this.profile.options.privateKeys.length) {
                 for (let pk of this.profile.options.privateKeys) {
@@ -191,7 +198,7 @@ export class SSHSession {
 
                     this.addPublicKeyAuthMethod(pk, contents)
                 }
-            } else {
+            } else if (!hasSavedPassword) {
                 for (const importer of this.privateKeyImporters) {
                     for (const [name, contents] of await importer.getKeys()) {
                         this.addPublicKeyAuthMethod(name, contents)
@@ -546,7 +553,7 @@ export class SSHSession {
             } catch (e) {
                 // eslint-disable-next-line @typescript-eslint/no-base-to-string
                 this.emitServiceMessage(colors.bgRed.black(' X ') + ` Could not connect to the X server: ${e}`)
-                this.emitServiceMessage(`    Tabby tried to connect to ${JSON.stringify(X11Socket.resolveDisplaySpec(displaySpec))} based on the DISPLAY environment var (${displaySpec})`)
+                this.emitServiceMessage(`    TabbyX tried to connect to ${JSON.stringify(X11Socket.resolveDisplaySpec(displaySpec))} based on the DISPLAY environment var (${displaySpec})`)
                 if (process.platform === 'win32') {
                     this.emitServiceMessage('    To use X forwarding, you need a local X server, e.g.:')
                     this.emitServiceMessage('    * VcXsrv: https://sourceforge.net/projects/vcxsrv/')
@@ -591,7 +598,13 @@ export class SSHSession {
         const keyDigest = crypto.createHash('sha256').update(key.bytes()).digest('base64')
 
         const knownHost = this.profile.options.host ? this.knownHosts.getFor(selector) : null
-        if (!knownHost || knownHost.digest !== keyDigest) {
+        if (!knownHost) {
+            // 首次连接：自动信任并记住 host key（TOFU），不再弹窗打断连接
+            await this.knownHosts.store(selector, keyDigest)
+            return true
+        }
+        if (knownHost.digest !== keyDigest) {
+            // host key 已变化：仍弹警告，防中间人攻击
             const modal = this.ngbModal.open(HostKeyPromptModalComponent)
             modal.componentInstance.selector = selector
             modal.componentInstance.digest = keyDigest

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { ToolbarButtonProvider, ToolbarButton, AppService, HostAppService, HotkeysService, TranslateService } from 'tabby-core'
+import { ToolbarButtonProvider, ToolbarButton, AppService, HostAppService, HotkeysService } from 'tabby-core'
 
 import { SettingsTabComponent } from './components/settingsTab.component'
 
@@ -10,7 +10,6 @@ export class ButtonProvider extends ToolbarButtonProvider {
         hostApp: HostAppService,
         hotkeys: HotkeysService,
         private app: AppService,
-        private translate: TranslateService,
     ) {
         super()
         hostApp.settingsUIRequest$.subscribe(() => this.open())
@@ -23,13 +22,9 @@ export class ButtonProvider extends ToolbarButtonProvider {
     }
 
     provide (): ToolbarButton[] {
-        return [{
-            icon: require('./icons/cog.svg'),
-            title: this.translate.instant('Settings'),
-            touchBarNSImage: 'NSTouchBarComposeTemplate',
-            weight: 10,
-            click: (): void => this.open(),
-        }]
+        // 设置入口已移到左侧连接树左下角（profile-tree 的 tree-footer），
+        // 不再占用 tab bar 右侧工具栏位置。热键 `settings` 与 settingsUIRequest$ 仍然生效。
+        return []
     }
 
     open (): void {

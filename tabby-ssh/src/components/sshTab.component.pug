@@ -6,21 +6,6 @@ terminal-toolbar([tab]='this')
         onclick='event.stopPropagation()'
     ) {{profile.options.user}}@{{profile.options.host}}:{{profile.options.port}}
 
-    .me-2(
-        ngbDropdown,
-        container='body',
-        *ngIf='session && !session.supportsWorkingDirectory()',
-        placement='bottom-right bottom-left bottom'
-    )
-        button.btn.btn-sm.btn-link(ngbDropdownToggle)
-            i.far.fa-lightbulb.text-primary
-        .bg-dark(ngbDropdownMenu)
-            a.d-flex.align-items-center(ngbDropdownItem, (click)='platform.openExternal("https://tabby.sh/go/cwd-detection")')
-                .me-auto
-                    strong(translate) Working directory detection
-                    div(translate) Learn how to allow Tabby to detect remote shell's working directory.
-                i.fas.fa-arrow-right.ms-4
-
     button.btn.btn-sm.btn-link.me-2((click)='reconnect()')
         i.fas.fa-redo
         span(translate) Reconnect
@@ -36,17 +21,6 @@ terminal-toolbar([tab]='this')
         i.fas.fa-plug
         span(translate) Ports
 
-
-sftp-panel.bg-dark(
-    @panelSlide,
-    [@.disabled]='!config.store.accessibility.animations',
-    [(path)]='sftpPath',
-    *ngIf='sftpPanelVisible && sshSession',
-    (click)='$event.stopPropagation()',
-    [session]='sshSession!',
-    [cwdDetectionAvailable]='session?.supportsWorkingDirectory() ?? false',
-    (closed)='sftpPanelVisible = false'
-)
 
 keyboard-interactive-auth-panel.bg-dark(
     *ngIf='activeKIPrompt',

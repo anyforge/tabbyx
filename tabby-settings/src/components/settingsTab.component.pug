@@ -11,8 +11,7 @@
                             .logo-area
                                 .tabby-logo.mt-3
 
-                                h1.tabby-title Tabby
-                                    sup α
+                                h1.tabby-title TabbyX
                                 .text-muted {{homeBase.appVersion}}
 
                                 button.btn.btn-secondary.mt-3.mb-2(
@@ -40,12 +39,6 @@
                                         div(translate) Report a problem
                                         small.text-muted(translate) Generate a pre-filled GitHub issue
 
-                                button.list-group-item.list-group-item-action.link-card((click)='homeBase.openDiscord()')
-                                    i.fab.fa-fw.fa-discord
-                                    div
-                                        div(translate) Community
-                                        small.text-muted(translate) On Discord
-
                                 button.list-group-item.list-group-item-action.link-card((click)='homeBase.openGitHub()')
                                     i.fab.fa-fw.fa-github
                                     div
@@ -64,7 +57,7 @@
                         .header
                             .title(translate) Language
                             a.description((click)='homeBase.openTranslations()')
-                                span(translate) Help translate Tabby
+                                span(translate) Help translate TabbyX
                                 i.fas.fa-external-link-square-alt.ms-1
                         select.form-control([(ngModel)]='config.store.language', (ngModelChange)='saveConfiguration(true)')
                             option([ngValue]='null', translate) Automatic
@@ -82,7 +75,7 @@
                     .form-line(*ngIf='hostApp.platform !== Platform.Web')
                         .header
                             .title(translate) Enable analytics
-                            .description(translate) We're only tracking your Tabby and OS versions.
+                            .description(translate) We're only tracking your TabbyX and OS versions.
                         toggle(
                             [(ngModel)]='config.store.enableAnalytics',
                             (ngModelChange)='saveConfiguration(true)',

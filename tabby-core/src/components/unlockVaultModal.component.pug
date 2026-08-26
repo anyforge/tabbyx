@@ -21,7 +21,7 @@
 
     .input-group
         input.form-control.form-control-lg(
-            type='password',
+            [type]='showPassword ? "text" : "password"',
             autofocus,
             [(ngModel)]='passphrase',
             #input,
@@ -29,5 +29,11 @@
             (keyup.enter)='ok()',
             (keyup.esc)='cancel()',
         )
+        button.btn.btn-secondary(
+            type='button',
+            (click)='showPassword = !showPassword',
+            (mousedown)='$event.preventDefault()'
+        )
+            i.far([class]="showPassword ? 'fa-eye-slash' : 'fa-eye'")
         button.btn.btn-secondary((click)='ok()', *ngIf='passphrase')
             i.fas.fa-check

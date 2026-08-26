@@ -11,7 +11,7 @@ import { compare as compareVersions } from 'compare-versions'
 
 import type { Application } from './app'
 import { parseArgs } from './cli'
-import { parseTabbyURL, isTabbyURL } from './urlHandler'
+import { parseTabbyXURL, isTabbyXURL } from './urlHandler'
 
 let DwmEnableBlurBehindWindow: any = null
 if (process.platform === 'win32') {
@@ -59,9 +59,9 @@ export class Window {
 
         const maximized = this.windowConfig.get('maximized')
         const bwOptions: BrowserWindowConstructorOptions = {
-            width: 800,
-            height: 600,
-            title: 'Tabby',
+            width: 1000,
+            height: 700,
+            title: 'TabbyX',
             minWidth: 400,
             minHeight: 300,
             webPreferences: {
@@ -280,9 +280,9 @@ export class Window {
     }
 
     passCliArguments (argv: string[], cwd: string, secondInstance: boolean): void {
-        const urlArg = argv.find(arg => isTabbyURL(arg))
+        const urlArg = argv.find(arg => isTabbyXURL(arg))
         if (urlArg) {
-            this.send('cli', parseTabbyURL(urlArg, cwd), cwd, secondInstance)
+            this.send('cli', parseTabbyXURL(urlArg, cwd), cwd, secondInstance)
         } else {
             this.send('cli', parseArgs(argv, cwd), cwd, secondInstance)
         }

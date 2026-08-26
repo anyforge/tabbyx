@@ -62,7 +62,7 @@ export class Session extends BaseSession {
                 {
                     COLORTERM: 'truecolor',
                     TERM: 'xterm-256color',
-                    TERM_PROGRAM: 'Tabby',
+                    TERM_PROGRAM: 'TabbyX',
                 },
                 substituteEnv(options.env),
                 this.config.store.terminal.environment || {},

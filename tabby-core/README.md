@@ -1,4 +1,4 @@
-# Tabby Core Plugin
+# TabbyX Core Plugin
 
 See also:
 

@@ -54,9 +54,10 @@ export class SSHProfilesService extends QuickConnectProfileProvider<SSHProfile> 
         private injector: Injector,
     ) {
         super()
+        // 保留 defaultAlgorithms 手写的「安全优先」顺序（ed25519/chacha20/hmac-sha2/curve25519 在前）。
+        // 不能 sort()：字母序会破坏优先级，导致弱算法（hmac-sha1、aes128-ctr、ecdsa）被优先协商。
         for (const k of Object.values(SSHAlgorithmType)) {
             this.configDefaults.options.algorithms[k] = [...defaultAlgorithms[k]]
-            if (k !== SSHAlgorithmType.COMPRESSION) { this.configDefaults.options.algorithms[k].sort() }
         }
     }
 
