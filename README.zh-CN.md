@@ -31,7 +31,7 @@ macOS 安装包未签名（无 Apple 开发者 ID），首次打开会提示「�
 
 ## 从源码构建
 
-依赖：Node.js 22、Yarn、Rust（rustup）；macOS 需 Xcode Command Line Tools，Linux 需 `gem install fpm` 与 `libfontconfig1-dev`/`libarchive-tools`，Windows 需 VS Build Tools（C++）。
+依赖：Node.js 22、Yarn、Rust（rustup）；macOS 需 Xcode Command Line Tools，Windows 需 VS Build Tools（C++）。
 
 ```bash
 git clone https://github.com/anyforge/tabbyx.git
@@ -47,7 +47,6 @@ node scripts/prepackage-plugins.mjs # 预打包内置插件
 |------|------|
 | macOS（Apple Silicon） | `ARCH=arm64 node scripts/build-macos.mjs` |
 | macOS（Intel） | `ARCH=x86_64 node scripts/build-macos.mjs` |
-| Linux（x64） | `ARCH=x64 node scripts/build-linux.mjs` |
 | Windows（x64） | `node scripts/build-windows.mjs` |
 
 产物在 `dist/`。

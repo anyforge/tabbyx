@@ -4,8 +4,7 @@
   "private": true,
   "repository": "https://github.com/anyforge/tabbyx",
   "author": {
-    "name": "anyforge",
-    "email": "christnowx@qq.com"
+    "name": "anyforge"
   },
   "main": "dist/main.js",
   "version": "1.0.1",
