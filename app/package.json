@@ -42,7 +42,7 @@
     "patch-package": "^8",
     "serialport": "11.0.1",
     "serialport-binding-webserialapi": "^1.0.3",
-    "windows-native-registry": "^3.2.1"
+    "windows-native-registry": "^3.2.2"
   },
   "devDependencies": {
     "@ngx-translate/core": "^14.0.0",
