@@ -219,9 +219,9 @@ jobs:
       shell: bash
       run: |
         if [ "$ARCH" = "arm64" ]; then
-          curl -sSL -o build/vc_redist.exe "https://aka.ms/vs/17/release/vc_redist.arm64.exe"
+          curl -sSL --retry 5 --retry-delay 3 --retry-all-errors -o build/vc_redist.exe "https://aka.ms/vs/17/release/vc_redist.arm64.exe"
         else
-          curl -sSL -o build/vc_redist.exe "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+          curl -sSL --retry 5 --retry-delay 3 --retry-all-errors -o build/vc_redist.exe "https://aka.ms/vs/17/release/vc_redist.x64.exe"
         fi
         ls -la build/vc_redist.exe
     - name: Build
