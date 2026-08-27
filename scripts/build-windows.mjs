@@ -22,6 +22,7 @@ builder({
         publish: [
             {
                 provider: 'github',
+                releaseType: 'release',
             },
         ],
         forceCodeSigning: !!keypair,

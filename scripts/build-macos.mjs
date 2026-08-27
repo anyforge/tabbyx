@@ -35,6 +35,7 @@ builder({
         publish: [
             {
                 provider: 'github',
+                releaseType: 'release',
             },
         ],
     },
