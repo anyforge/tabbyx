@@ -18,16 +18,28 @@ On top of everything native Tabby offers, TabbyX adds:
 - **Unified config dir `~/.config/tabbyx/`** — Same path on macOS and Linux for easier cross-machine sync
 - **Themes** — Dracula (dark default), One Dark, One Half Light (light default)
 
-## Note for macOS users
+## Code signing
 
-macOS builds are unsigned (no Apple Developer ID). On first launch, macOS may report "TabbyX is damaged and can't be opened" or "cannot verify the developer". To open it:
+This project currently has **no Apple Developer ID** and **no Windows code-signing certificate**, so every installer is **unsigned**.
 
-- Right-click the app in Finder → **Open** (do this once), or
+### macOS
+
+Unsigned and unnotarized, so Gatekeeper blocks the first launch ("cannot verify the developer" / "is damaged and can't be opened"). To open it:
+
+- Right-click the app in Finder → **Open** (once), or
 - Remove the quarantine attribute:
 
   ```bash
   xattr -cr /Applications/TabbyX.app
   ```
+
+### Windows
+
+Unsigned, so SmartScreen shows "Windows protected your PC". Click **More info** → **Run anyway** to proceed.
+
+### Linux
+
+Linux packages don't require signing — install them as usual.
 
 ## Building from source
 

@@ -18,9 +18,13 @@
 - **配置目录统一 `~/.config/tabbyx/`**：macOS / Linux 同一路径，跨机同步更省心
 - **主题**：Dracula（暗色默认）、One Dark、One Half Light（亮色默认）
 
-## macOS 用户注意
+## 签名说明
 
-macOS 安装包未签名（无 Apple 开发者 ID），首次打开会提示「已损坏，无法打开」或「无法验证开发者」。解决方法：
+本项目目前**没有 Apple 开发者 ID**，也**没有 Windows 代码签名证书**，因此所有安装包均为**未签名**状态。
+
+### macOS
+
+未签名且未公证，首次打开会被 Gatekeeper 拦截（「无法验证开发者」/「已损坏，无法打开」）。打开方法：
 
 - 在「访达」中右键 App → **打开**（一次即可），或
 - 命令行移除隔离属性：
@@ -28,6 +32,14 @@ macOS 安装包未签名（无 Apple 开发者 ID），首次打开会提示「�
   ```bash
   xattr -cr /Applications/TabbyX.app
   ```
+
+### Windows
+
+未签名，SmartScreen 会提示「Windows 已保护你的电脑」，点 **更多信息** → **仍要运行** 即可。
+
+### Linux
+
+Linux 安装包不强制签名，正常安装即可。
 
 ## 从源码构建
 
