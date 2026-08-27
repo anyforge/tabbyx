@@ -31,7 +31,7 @@ macOS builds are unsigned (no Apple Developer ID). On first launch, macOS may re
 
 ## Building from source
 
-Requirements: Node.js 22, Yarn, Rust (via rustup). Also Xcode Command Line Tools on macOS and VS Build Tools (C++) on Windows.
+Requirements: Node.js 22, Yarn, Rust (via rustup). Also Xcode Command Line Tools on macOS, `gem install fpm` + `libfontconfig1-dev`/`libarchive-tools` on Linux, and VS Build Tools (C++) on Windows.
 
 ```bash
 git clone https://github.com/anyforge/tabbyx.git
@@ -47,6 +47,7 @@ Then package per platform:
 |----------|---------|
 | macOS (Apple Silicon) | `ARCH=arm64 node scripts/build-macos.mjs` |
 | macOS (Intel) | `ARCH=x86_64 node scripts/build-macos.mjs` |
+| Linux (x64) | `ARCH=x64 node scripts/build-linux.mjs` |
 | Windows (x64) | `node scripts/build-windows.mjs` |
 
 Installers land in `dist/`.
